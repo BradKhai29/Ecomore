@@ -1,0 +1,50 @@
+﻿@using DataAccess.Entities
+@using Presentation.Commons.Constants
+@{
+    var products = ViewData[nameof(TopProducts)] as IEnumerable<ProductEntity>;
+
+    var isValidToDisplay = !Equals(products, null) && products.Count() > 0;
+}
+
+<div class="row">
+    @if(isValidToDisplay)
+    @foreach(var product in products)
+    {
+    <div class="col-sm-6 col-md-3 mb-4">
+        <div class="card product-item" name="product-id" id="@product.Id" onclick="AddItemToCart(event);">
+            <a href="/Product/Detail/@product.Id">
+                @{
+                    var imageUrl = AppDefaultValues.DefaultImageUrl;
+                    var productImage = product.ProductImages.FirstOrDefault();
+                    if (productImage != null)
+                    {
+                        imageUrl = productImage.StorageUrl;
+                    }
+                }
+                <img name="product-image" src="@imageUrl" class="card-img-top" alt="Product Image">
+            </a>
+            <section class="card-body">
+                <h5 class="card-title">
+                    <a href="/Product/Detail/@product.Id" class="product-name">
+                        @product.Name
+                    </a>
+                </h5>
+                <h6 class="card-text">Category: @product.Category.Name</h6>
+                <div class="d-flex fw-bold">
+                    <p class="flex-grow-1 me-2" name="unit-price">@product.UnitPrice</p>
+                    <p class="ms-auto text-success">@(product.IsAvailable ? "In stock" : "Out of stock")</p>
+                </div>
+                <div class="d-flex">
+                    <input class="product-quantity" value="1" hidden/>
+                    <button name="add-to-cart" class="fw-bold btn btn-dark flex-grow-1 me-2">
+                        Add to Cart
+                    </button>
+                    <button name="buy-product" class="ms-auto btn btn-dark">
+                        <i class="fa-solid fa-bag-shopping"></i>
+                    </button>
+                </div>
+            </section>
+        </div>
+    </div>
+    }
+</div>

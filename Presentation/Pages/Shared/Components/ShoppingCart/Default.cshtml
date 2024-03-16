@@ -1,0 +1,68 @@
+﻿@using DataAccess.Entities
+@using Presentation.Commons.Constants
+@{
+    var shoppingCart = ViewData[nameof(ShoppingCart)] as IEnumerable<ProductEntity>;
+    var total = ViewData["Total"];
+    var isValidToDisplay = !Equals(shoppingCart, null) && shoppingCart.Count() > 0;
+}
+
+<section id="view-shopping-cart" name="wrapper" style="display: none;"
+         class="position-fixed row m-0 p-0 top-0 bottom-0 start-0 end-0 justify-content-end">
+    <section name="shopping-cart-header" class="col-sm-12 col-md-4 p-0 h-100 bg-light position-relative">
+        <header class="bg-success bg-opacity-50 px-2 py-3 d-flex justify-content-between position-absolute top-0 start-0 end-0">
+            <span class="my-auto h3">Shopping Cart</span>
+            <button onclick="HideShoppingCart();" class="btn btn-outline-light border-3 rounded-circle">
+                <i class="fa-solid fa-x"></i>
+            </button>
+        </header>
+        <main class="h-100" style="padding-top: 4.5rem">
+            <div name="shopping-cart-items" class="d-flex flex-column h-100">
+                <ul id="item-list" class="p-0 m-0 bg-white overflow-auto hide-scrollbar flex-grow-1">
+                    @if (isValidToDisplay)
+                    {
+                        @foreach (var item in shoppingCart)
+                        {
+                            <li name="cart-item" id="@item.Id" onclick="RemoveItemFromCart(event);" class="p-2 d-flex shadow-sm">
+                                <div class="col-auto d-none d-lg-block">
+                                    <img style="width: 100px; height: 100px" class="rounded"
+                                    src="@item.ProductImages.FirstOrDefault().StorageUrl" />
+                                </div>
+                                <div class="ms-2 d-flex flex-grow-1">
+                                    <div class="my-auto">
+                                        <strong class="d-inline-block mb-2 text-primary product-name">
+                                            @item.Name
+                                        </strong>
+                                        <p class="card-text mb-auto">
+                                            <span class="cart-item-quantity">
+                                                @item.QuantityInStock
+                                            </span>
+                                            x
+                                            <span class="cart-item-unit-price">
+                                                @item.UnitPrice
+                                            </span>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <button id="remove-item-button" class="btn btn-light border-3 rounded-circle">
+                                        <i id="remove-item-button" class="fa-solid fa-x"></i>
+                                    </button>
+                                </div>
+                            </li>
+                        }
+                    }
+                </ul>
+                <footer name="footer" class="px-2 bg-dark text-light">
+                    <div class="py-2 d-flex justify-content-between border-2 border-bottom">
+                        <span>Total: </span>
+                        <span>@total VND</span>
+                    </div>
+                    <div class="d-flex flex-column py-3">
+                        <button class="btn btn-light mb-2">VIEW CART</button>
+                        <button class="btn btn-light">CHECKOUT</button>
+                    </div>
+                </footer>
+            </div>
+        </main>
+    </section>
+</section>
