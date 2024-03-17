@@ -1,0 +1,147 @@
+﻿@page
+@using DataAccess.Entities;
+@using Presentation.Commons.Constants
+@model Presentation.Pages.CheckOut.IndexModel
+@{
+    var shoppingCart = ViewData[nameof(ShoppingCart)] as IEnumerable<ProductEntity>;
+    var isValidToDisplay = !Equals(shoppingCart, null) && shoppingCart.Count() > 0;
+    var total = ViewData["Total"];
+}
+<style>
+    .orderdetails {
+        width: 30%; 
+        background-color: #959595;
+        float: left;
+        height: 500px;}
+
+    .form-container {
+        color: white;
+        font-family: Arial, sans-serif;
+        width: 60%;
+        max-width: 500px;
+        margin: 0 auto;
+        padding: 50px;
+        background-color: #222;
+        border-radius: 10px;
+        float: left;
+        margin-right: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .label-info {
+        display: block;
+        font-weight: bold;
+    }
+
+    input[type="text"],
+    textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #555;
+        border-radius: 5px;
+        background-color: white;
+        color: white;
+    }
+
+    .name-container {
+        display: flex;
+        justify-content: space-between;
+    }
+</style>
+<div class="row">
+    <h3 class="text-dark text-center my-4">
+        <span class="pb-1 border-4 border-bottom border-dark">Thanh Toán</span>
+    </h3>
+</div>
+
+<section class=" row my-3">
+    
+        <div class="form-container">
+            <form action="#" method="post">
+                <div class="form-group">
+                    <div class="name-container">
+                        <div>
+                            <label for="firstName">First Name</label>
+                            <input type="text" id="firstName" name="firstName" required>
+                        </div>
+                        <div>
+                            <label for="lastName">Last Name</label>
+                            <input type="text" id="lastName" name="lastName" required>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+                    <label for="address">Your Address</label>
+                    <textarea id="address" name="address" rows="4" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="text" id="phone" name="phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="text" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="notes">Additional Information</label> 
+                    <textarea id="notes" name="notes" rows="6"></textarea>
+                </div>
+            </form>
+        
+        </div>
+
+    <div class="orderdetails">
+        <h2>Your order</h2>
+        <div class="product">
+            <ul id="item-list" class="p-0 m-0 bg-white overflow-auto hide-scrollbar flex-grow-1">
+                    @if (isValidToDisplay)
+                {
+                    @foreach (var item in shoppingCart)
+                    {
+                        <li name="cart-item" id="@item.Id"  class="p-2 d-flex shadow-sm">
+                            <div class="ms-2 d-flex flex-grow-1">
+                                <div class="my-auto">
+                                    <strong class="d-inline-block mb-2 text-primary product-name">
+                                        @item.Name
+                                    </strong>
+                                    <p class="card-text mb-auto">
+                                        <span class="cart-item-quantity">
+                                            @item.QuantityInStock
+                                        </span>
+                                        x
+                                        <span class="cart-item-unit-price">
+                                            @item.UnitPrice
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                        </li>
+                    }
+
+                }
+            </ul>
+        </div>
+       
+        <!-- Add more product items -->
+        <hr>
+        <div class="subtotal">
+            <span>Subtotal</span>
+            <span>@total VND</span>
+        </div>
+        <div class="total">
+            Total: 9,450,000 VND
+        </div>
+        <div class="payment-options">
+            <input type="radio" id="bank-transfer" name="payment" value="bank-transfer">
+            <label for="bank-transfer">Direct bank transfer</label><br>
+            <input type="radio" id="cash-on-delivery" name="payment" value="cash-on-delivery">
+            <label for="cash-on-delivery">Cash on delivery</label><br>
+        </div>
+        <button type="submit">Place order</button>
+    </div>
+</section>

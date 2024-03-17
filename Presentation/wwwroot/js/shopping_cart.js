@@ -36,6 +36,12 @@ function CreateRemoveItemFromCartRequest(productId) {
 
 	return request;
 }
+function MoveShoppingCart() {
+	window.location.href = '/ShoppingCart/Index';
+}
+function MoveCheckOut() {
+	window.location.href = '/CheckOut/Index';
+}
 
 function ShowShoppingCart() {
 	shoppingCart.style = "z-index: 999; top: 0; right: 0; left: 0; bottom: 0;";
