@@ -2,7 +2,7 @@
 using DTOs.Implementation.ShoppingCarts.Incomings;
 using DTOs.ValidationAttributes;
 using Microsoft.AspNetCore.Mvc;
-using Presentation.ExtensionMethods.Others;
+using Presentation.ExtensionMethods.HttpContexts;
 using Presentation.Models;
 using System.ComponentModel.DataAnnotations;
 using System.Net.Mime;
@@ -45,7 +45,7 @@ namespace Presentation.Controllers
             // Verify the shopping cart cookie is valid or not.
             var shoppingCart = HttpContext.GetShoppingCart();
 
-            if (!shoppingCart.VerifyCustomerId(customerId))
+            if (!shoppingCart.VerifyGuestId(customerId))
             {
                 HttpContext.RemoveShoppingCartCookie();
 
@@ -125,7 +125,7 @@ namespace Presentation.Controllers
             // Verify the shopping cart cookie is valid or not.
             var shoppingCart = HttpContext.GetShoppingCart();
 
-            if (!shoppingCart.VerifyCustomerId(customerId))
+            if (!shoppingCart.VerifyGuestId(customerId))
             {
                 HttpContext.RemoveShoppingCartCookie();
 

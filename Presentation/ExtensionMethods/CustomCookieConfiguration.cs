@@ -6,7 +6,7 @@ namespace Presentation.ExtensionMethods
     {
         public static IServiceCollection AddCustomCookieConfiguration(this IServiceCollection services)
         {
-            services.AddScoped<CustomerIdCookieMiddleware>();
+            services.AddScoped<GuestIdCookieMiddleware>();
 
             return services;
         }

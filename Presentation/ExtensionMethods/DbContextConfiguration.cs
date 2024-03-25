@@ -14,7 +14,7 @@ namespace Presentation.ExtensionMethods
         {
             services.AddDbContextPool<AppDbContext>(optionsAction: options =>
             {
-                var connectionString = configurationManager.GetConnectionString(RemoteSectionName);
+                var connectionString = configurationManager.GetConnectionString(LocalSectionName);
 
                 options.UseSqlServer(connectionString);
                 options.UseLoggerFactory(GetLoggerFactory());

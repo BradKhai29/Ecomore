@@ -10,6 +10,8 @@ namespace DataAccess.Entities
 
         public string Content { get; set; }
 
+        public bool IsVerifiedToUpload { get; set; }
+
         public DateTime CreatedAt { get; set; }
 
         public Guid CreatedBy { get; set; }

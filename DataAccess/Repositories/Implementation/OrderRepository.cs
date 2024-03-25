@@ -24,9 +24,35 @@ namespace DataAccess.Repositories.Implementation
             throw new NotImplementedException();
         }
 
-        public override Task<IEnumerable<OrderEntity>> GetAllByExpressionAsync(Expression<Func<OrderEntity, bool>> findExpresison, CancellationToken cancellationToken)
+        public override async Task<IEnumerable<OrderEntity>> GetAllByExpressionAsync(
+            Expression<Func<OrderEntity, bool>> findExpresison,
+            CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return await _dbSet
+                .Where(findExpresison)
+                .Select(order => new OrderEntity
+                {
+                    Id = order.Id,
+                    CreatedAt = order.CreatedAt,
+                    OrderItems = order.OrderItems.Select(orderItem => new OrderItemEntity
+                    {
+                        ProductId = orderItem.ProductId,
+                        Product = new ProductEntity
+                        {
+                            Name = orderItem.Product.Name
+                        },
+                        SellingPrice = orderItem.SellingPrice,
+                        SellingQuantity = orderItem.SellingQuantity,
+                    }),
+                    Status = new OrderStatusEntity
+                    {
+                        Id = order.Status.Id,
+                        Name = order.Status.Name,
+                    },
+                    OrderNote = order.OrderNote,
+                    TotalPrice = order.TotalPrice,
+                })
+                .ToListAsync(cancellationToken);
         }
     }
 }

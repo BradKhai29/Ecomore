@@ -6,6 +6,8 @@ namespace DataAccess.Entities
     {
         public Guid ProductId { get; set; }
 
+        public int UploadOrder { get; set; }
+
         public string FileName { get; set; }
 
         public string StorageUrl { get; set; }

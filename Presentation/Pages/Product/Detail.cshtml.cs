@@ -47,7 +47,11 @@ namespace Presentation.Pages.Product
                 },
                 Name = foundProduct.Name,
                 Description = foundProduct.Description,
-                IsAvailable = foundProduct.IsAvailable,
+                ProductStatus = new DTOs.Implementation.ProductStatuses.Outgoings.GetProductStatusByIdDto
+                {
+                    Id = foundProduct.ProductStatus.Id,
+                    Name = foundProduct.ProductStatus.Name
+                },
                 QuantityInStock = foundProduct.QuantityInStock,
                 UnitPrice = foundProduct.UnitPrice,
                 ImageUrls = foundProduct.ProductImages.Select(image => image.StorageUrl)

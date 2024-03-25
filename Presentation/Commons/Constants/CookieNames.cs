@@ -2,7 +2,7 @@
 {
     public class CookieNames
     {
-        public const string CustomerId = "customer_id";
+        public const string GuestId = "guest_id";
         
         public const string ShoppingCart = "shopping_cart"; 
 

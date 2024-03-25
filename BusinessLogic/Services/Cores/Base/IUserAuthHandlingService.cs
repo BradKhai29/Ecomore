@@ -9,8 +9,13 @@ namespace BusinessLogic.Services.Cores.Base
 {
     public interface IUserAuthHandlingService
     {
-        Task<IResult<UserEntity>> LoginAsync(
+        Task<IResult<UserEntity>> LoginByUsernameAsync(
             string username,
+            string password,
+            CancellationToken cancellationToken);
+
+        Task<IResult<UserEntity>> LoginByEmailAsync(
+            string email,
             string password,
             CancellationToken cancellationToken);
 
@@ -30,6 +35,10 @@ namespace BusinessLogic.Services.Cores.Base
         /// </returns>
         Task<IResult<Guid>> RegisterAsync(
             RegisterDto registerDto,
+            CancellationToken cancellationToken);
+
+        Task<IResult<Guid>> RegisterSystemUserAsync(
+            UserEntity user,
             CancellationToken cancellationToken);
 
         Task<bool> ConfirmEmailForUserAsync(UserEntity user, CancellationToken cancellationToken);

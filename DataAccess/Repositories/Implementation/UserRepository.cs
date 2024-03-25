@@ -3,6 +3,7 @@ using DataAccess.Repositories.Base;
 using DataAccess.Repositories.Base.Generics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace DataAccess.Repositories.Implementation;
 
@@ -89,5 +90,40 @@ public class UserRepository :
                 .SetProperty(
                     user => user.UpdatedAt,
                     user => updatedAt));
+    }
+
+    public Task<bool> IsUserNameExistedAsync(
+        string userName,
+        CancellationToken cancellationToken)
+    {
+        return _dbSet.AnyAsync(
+            predicate: user => user.UserName == userName,
+            cancellationToken: cancellationToken);
+    }
+
+    public Task<bool> IsEmailExistedAsync(string email, CancellationToken cancellationToken)
+    {
+        return _dbSet.AnyAsync(
+            predicate: user => user.Email == email,
+            cancellationToken: cancellationToken);
+    }
+
+    public Task<UserEntity> FindByExpressionAsync(
+        Expression<Func<UserEntity, bool>> findExpression,
+        CancellationToken cancellationToken)
+    {
+        return _dbSet
+            .AsNoTracking()
+            .Where(predicate: findExpression)
+            .Select(selector: user => new UserEntity
+            {
+                Id = user.Id,
+                FullName = user.FullName,
+                UserName = user.UserName,
+                PasswordHash = user.PasswordHash,
+                AvatarUrl = user.AvatarUrl,
+                Email = user.Email
+            })
+            .FirstOrDefaultAsync(cancellationToken: cancellationToken);
     }
 }

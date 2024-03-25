@@ -1,3 +1,10 @@
+:root {
+    --bs-dark: #000811;
+    --bs-dark-rgb: 0, 8, 17;
+    --bs-success: #99b44a;
+    --bs-success-rgb: 153, 180, 74;
+}
+
 html {
   font-size: 14px;
 }

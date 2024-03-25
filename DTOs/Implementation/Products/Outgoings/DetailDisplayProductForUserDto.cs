@@ -1,4 +1,5 @@
 ﻿using DTOs.Implementation.Categories.Outgoings;
+using DTOs.Implementation.ProductStatuses.Outgoings;
 using System;
 using System.Collections.Generic;
 
@@ -17,6 +18,8 @@ namespace DTOs.Implementation.Products.Outgoings
         public decimal UnitPrice { get; set; }
 
         public int QuantityInStock { get; set; }
+
+        public GetProductStatusByIdDto ProductStatus { get; set; }
 
         public bool IsAvailable { get; set; }
 

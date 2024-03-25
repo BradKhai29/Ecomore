@@ -1,4 +1,7 @@
-﻿namespace DataAccess.DataSeedings
+﻿using DataAccess.Entities;
+using static DataAccess.DataSeedings.OrderStatuses;
+
+namespace DataAccess.DataSeedings
 {
     public static class PaymentMethods
     {
@@ -21,5 +24,29 @@
 
             public const string Name = "Cash On Delivery";
         }
+
+        #region Public Methods
+        private static IEnumerable<PaymentMethodEntity> _values;
+        private static readonly object _lock = new();
+
+        public static IEnumerable<PaymentMethodEntity> GetValues()
+        {
+            const int total = 2;
+
+            lock (_lock)
+            {
+                if (_values == null)
+                {
+                    _values = new List<PaymentMethodEntity>(capacity: total)
+                    {
+                        new() {Id = OnlineBanking.Id, Name = OnlineBanking.Name},
+                        new() {Id = CashOnDelivery.Id, Name = CashOnDelivery.Name},
+                    };
+                }
+
+                return _values;
+            }
+        }
+        #endregion
     }
 }

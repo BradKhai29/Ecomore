@@ -1,0 +1,99 @@
+﻿@using DTOs.Implementation.Products.Outgoings
+@{
+    DetailDisplayProductForUserDto Product = ViewData[nameof(Product)] as DetailDisplayProductForUserDto;
+    var product = Product;
+    int imageOrder = 0;
+
+    bool isFound = Product != null;
+}
+
+@if (isFound)
+{
+    <section class="container">
+        <section class="row mx-0 rounded bg-light my-3">
+            <div aria-label="breadcrumb">
+                <ol class="breadcrumb m-0 p-2">
+                    <li class="breadcrumb-item">
+                        <a class="text-muted nav-link p-0" href="#">@product.Category.Name</a>
+                    </li>
+                    <li class="breadcrumb-item active">@product.Name</li>
+                </ol>
+            </div>
+        </section>
+
+        <section id="@product.Id" class="row mx-0">
+            <div class="col-sm-12 col-md-5 p-0 d-flex flex-column border border-end">
+                <div class="flex-grow-1 d-flex">
+                    @foreach (var imageUrl in product.ImageUrls)
+                    {
+                        <img class="w-100" src="@imageUrl"
+                             name="@(imageOrder == 0 ? "product-image" : "normal-iamge")"
+                             style="display: @(imageOrder == 0 ? "inline" : "none")" />
+                        {
+                            imageOrder = imageOrder + 1;
+                        }
+                    }
+                </div>
+                <section class="p-3 position-relative">
+                    <div class="d-flex overflow-scroll hide-scrollbar justify-content-center">
+                        <button class="position-absolute rounded-circle btn btn-dark top-50 end-0 me-1 translate-middle-y">
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                        <button class="position-absolute rounded-circle btn btn-dark top-50 start-0 ms-1 translate-middle-y">
+                            <i class="fa-solid fa-arrow-left"></i>
+                        </button>
+                        @for (int i = 0; i < 4; i++)
+                        {
+                            <div class="mx-1">
+                                <img style="width: 100px; height: 100px" class="rounded"
+                                     src="https://www.svgrepo.com/show/508699/landscape-placeholder.svg" />
+                            </div>
+                        }
+                    </div>
+                </section>
+            </div>
+            <div class="col-sm-12 col-md-7 p-4 d-flex flex-column border border-end border-bottom">
+                <section class="d-flex flex-column flex-grow-1">
+                    <p class="d-flex flex-column">
+                        <span class="h3 product-name">@product.Name</span>
+                        <div class="text-muted h5 display-flex flex-row">
+                            <span>ĐƠN GIÁ:</span>
+                            <span name="unit-price">@product.UnitPrice</span>
+                            <span name="ms-1">VND</span>
+                        </div>
+                    </p>
+                    <section id="product-description" class="d-flex flex-column flex-grow-1">
+                        <p class="flex-grow-1">Mô tả: @product.Description</p>
+                        <div class="d-flex">
+                            <div class="d-flex me-2 align-items-center">
+                                <span class="h5 m-0">SỐ LƯỢNG TRONG KHO : @product.QuantityInStock</span>
+                            </div>
+                        </div>
+                    </section>
+                    <div class="d-flex pt-4 pb-2">
+                        <button class="btn btn-dark flex-grow-1 rounded-0 fw-bold">
+                            TRẠNG THÁI SẢN PHẨM: KHÔNG KHẢ DỤNG
+                        </button>
+                        <a href="/Admin/Product/Edit/@product.Id" class="ms-2 btn btn-danger rounded-0 fw-bold">
+                            EDIT
+                        </a>
+                    </div>
+                </section>
+            </div>
+        </section>
+    </section>
+}
+else
+{
+    <section class="container mt-5">
+        <div class="p-5 mb-4 bg-danger bg-opacity-50 rounded-3">
+            <div class="container">
+                <h1 class="display-5 fw-bold mb-4">Product is not found.</h1>
+                <p class="col-md-8 fs-4">Please check again the input productId.</p>
+                <a href="/Admin/Product" class="btn btn-warning btn-lg fw-bold" type="button">Back to product page.</a>
+            </div>
+        </div>
+    </section>
+}
+
+

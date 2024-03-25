@@ -4,144 +4,153 @@
 @model Presentation.Pages.CheckOut.IndexModel
 @{
     var shoppingCart = ViewData[nameof(ShoppingCart)] as IEnumerable<ProductEntity>;
-    var isValidToDisplay = !Equals(shoppingCart, null) && shoppingCart.Count() > 0;
+    ViewData["DisplayShoppingCart"] = false;
+
     var total = ViewData["Total"];
 }
 <style>
-    .orderdetails {
-        width: 30%; 
-        background-color: #959595;
-        float: left;
-        height: 500px;}
-
-    .form-container {
-        color: white;
-        font-family: Arial, sans-serif;
-        width: 60%;
-        max-width: 500px;
-        margin: 0 auto;
-        padding: 50px;
-        background-color: #222;
-        border-radius: 10px;
-        float: left;
-        margin-right: 20px;
-    }
-
-    .form-group {
-        margin-bottom: 20px;
-    }
-
-    .label-info {
-        display: block;
-        font-weight: bold;
-    }
-
-    input[type="text"],
-    textarea {
-        width: 100%;
-        padding: 10px;
-        border: 1px solid #555;
-        border-radius: 5px;
-        background-color: white;
-        color: white;
-    }
-
-    .name-container {
-        display: flex;
-        justify-content: space-between;
+    .form-control {
+        border-radius: unset;
     }
 </style>
-<div class="row">
-    <h3 class="text-dark text-center my-4">
-        <span class="pb-1 border-4 border-bottom border-dark">Thanh Toán</span>
-    </h3>
-</div>
+<div class="container my-5" style="max-width: 1080px">
+    <main>
+        <div class="py-3 text-center">
+            <h2>Checkout Form</h2>
+            <p class="lead">Please review again your checkout information before payment.</p>
+        </div>
 
-<section class=" row my-3">
-    
-        <div class="form-container">
-            <form action="#" method="post">
-                <div class="form-group">
-                    <div class="name-container">
-                        <div>
-                            <label for="firstName">First Name</label>
-                            <input type="text" id="firstName" name="firstName" required>
+        <form class="row g-5 needs-validation" method="post" novalidate>
+            <section class="col-md-7 col-lg-8">
+                <section class="px-3 bg-dark text-success fw-bold py-4">
+                    <div class="row g-3">
+                        <div class="col-sm-6">
+                            <label asp-for="@Model.BillingDetail.FirstName" class="form-label">First name</label>
+                            <input type="text" class="form-control" asp-for="@Model.BillingDetail.FirstName" required>
+                            <div class="invalid-feedback">
+                                Valid first name is required.
+                            </div>
                         </div>
-                        <div>
-                            <label for="lastName">Last Name</label>
-                            <input type="text" id="lastName" name="lastName" required>
+
+                        <div class="col-sm-6">
+                            <label asp-for="@Model.BillingDetail.LastName" class="form-label">Last name</label>
+                            <input type="text" class="form-control" asp-for="@Model.BillingDetail.LastName" required>
+                            <div class="invalid-feedback">
+                                Valid last name is required.
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <label asp-for="@Model.BillingDetail.Email" class="form-label">Email</label>
+                            <input type="email" class="form-control" asp-for="@Model.BillingDetail.Email" placeholder="you@example.com" required>
+                            <div class="invalid-feedback">
+                                Please enter a valid email address for shipping updates.
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <label asp-for="@Model.BillingDetail.PhoneNumber" class="form-label">Phone Number</label>
+                            <input type="text" class="form-control" asp-for="@Model.BillingDetail.PhoneNumber" placeholder="+01234567" required>
+                            <div class="invalid-feedback">
+                                Please enter your phone number.
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <label asp-for="@Model.BillingDetail.DeliveryAddress" class="form-label">Delivery Address</label>
+                            <input type="text" class="form-control" asp-for="@Model.BillingDetail.DeliveryAddress" placeholder="Your apartment or house address" required>
+                            <div class="invalid-feedback">
+                                Please enter your delivery address.
+                            </div>
                         </div>
                     </div>
 
-                </div>
+                    <section class="py-3 border-bottom border-top my-4">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" asp-for="@Model.BillingDetail.SaveInformation">
+                            <label class="form-check-label" asp-for="@Model.BillingDetail.SaveInformation">Save this information for next payment time.</label>
+                        </div>
+                    </section>
 
-                <div class="form-group">
-                    <label for="address">Your Address</label>
-                    <textarea id="address" name="address" rows="4" required></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="phone">Phone Number</label>
-                    <input type="text" id="phone" name="phone" required>
-                </div>
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="text" id="email" name="email" required>
-                </div>
-                <div class="form-group">
-                    <label for="notes">Additional Information</label> 
-                    <textarea id="notes" name="notes" rows="6"></textarea>
-                </div>
-            </form>
-        
-        </div>
-
-    <div class="orderdetails">
-        <h2>Your order</h2>
-        <div class="product">
-            <ul id="item-list" class="p-0 m-0 bg-white overflow-auto hide-scrollbar flex-grow-1">
-                    @if (isValidToDisplay)
-                {
-                    @foreach (var item in shoppingCart)
-                    {
-                        <li name="cart-item" id="@item.Id"  class="p-2 d-flex shadow-sm">
-                            <div class="ms-2 d-flex flex-grow-1">
-                                <div class="my-auto">
-                                    <strong class="d-inline-block mb-2 text-primary product-name">
-                                        @item.Name
-                                    </strong>
-                                    <p class="card-text mb-auto">
-                                        <span class="cart-item-quantity">
-                                            @item.QuantityInStock
-                                        </span>
-                                        x
-                                        <span class="cart-item-unit-price">
-                                            @item.UnitPrice
-                                        </span>
-                                    </p>
+                    <div class="col-12">
+                        <h3 class="fw-bold border-bottom border-2 pb-3">Additional Information</h3>
+                        <label asp-for="@Model.BillingDetail.UserNote" class="form-label">Notes</label>
+                        <textarea type="text" class="form-control" asp-for="@Model.BillingDetail.UserNote" placeholder="Some additional notes for us"></textarea>
+                    </div>
+                </section>
+            </section>
+            <section class="col-md-5 col-lg-4 d-flex">
+                <section class="flex-grow-1 bg-success d-flex flex-column border border-2 border-dark">
+                    <h4 class="d-flex justify-content-between align-items-center p-3 mb-3 border-2 border-bottom border-dark">
+                        <span class="text-dark">Your cart</span>
+                        <span class="badge bg-light text-dark">
+                            @{
+                                int count = Model.CartItems.Count();
+                            }
+                            @count item@(count > 1 ? "s" : "")
+                        </span>
+                    </h4>
+                    <ul class="list-group mb-3 flex-grow-1 px-3">
+                        @foreach (var item in Model.CartItems)
+                        {
+                            <li class="list-group-item lh-sm">
+                                <div class="d-flex justify-content-between">
+                                    <h6 class="my-0">So luong: @item.Quantity</h6>
+                                    <span class="text-muted">@item.UnitPrice VND</span>
                                 </div>
+                                <small class="text-muted">@item.ProductName </small>
+                            </li>
+                        }
+                        @* <li class="list-group-item d-flex justify-content-between bg-light">
+                            <div class="text-dark">
+                                <h6 class="my-0">Coupon code</h6>
+                                <small>EXAMPLECODE</small>
                             </div>
+                            <span class="text-dark">−200.000VND</span>
+                        </li> *@
+                    </ul>
+                    <ul class="list-group mb-3 mt-auto px-3">
+                        <li class="list-group-item d-flex justify-content-between bg-light">
+                            <div class="text-dark d-flex">
+                                <h6 class="my-0 align-self-center">Subtotal</h6>
+                            </div>
+                            <span class="text-dark">@Model.Total VND</span>
                         </li>
-                    }
-
-                }
-            </ul>
-        </div>
-       
-        <!-- Add more product items -->
-        <hr>
-        <div class="subtotal">
-            <span>Subtotal</span>
-            <span>@total VND</span>
-        </div>
-        <div class="total">
-            Total: 9,450,000 VND
-        </div>
-        <div class="payment-options">
-            <input type="radio" id="bank-transfer" name="payment" value="bank-transfer">
-            <label for="bank-transfer">Direct bank transfer</label><br>
-            <input type="radio" id="cash-on-delivery" name="payment" value="cash-on-delivery">
-            <label for="cash-on-delivery">Cash on delivery</label><br>
-        </div>
-        <button type="submit">Place order</button>
-    </div>
-</section>
+                        <li class="list-group-item d-flex justify-content-between bg-light">
+                            <div class="text-dark d-flex">
+                                <h6 class="my-0 align-self-center">Total</h6>
+                            </div>
+                            <span class="text-dark">@Model.Total VND</span>
+                        </li>
+                    </ul>
+                    <div class="pb-4 px-3">
+                        <section class="card p-2">
+                            <div class="input-group">
+                                <input type="text" class="form-control rounded-start" placeholder="Coupon code">
+                                <button class="btn btn-dark">Apply</button>
+                            </div>
+                            <section class="pt-2 mt-3 border-2 border-top border-dark">
+                                <p class="fw-bold mb-1">Payment Method</p>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                                    <label class="form-check-label" for="flexRadioDefault1">
+                                        Cash On Delivery (COD)
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
+                                    <label class="form-check-label" for="flexRadioDefault2">
+                                        Online Banking
+                                    </label>
+                                </div>
+                                <div class="d-flex mt-3">
+                                    <button class="flex-fill btn btn-dark fw-bold" type="submit">Go to Payment</button>
+                                </div>
+                            </section>
+                        </section>
+                    </div>
+                </section>
+            </section>
+        </form>
+    </main>
+</div>
+<script src="~/js/form_validation.js"></script>

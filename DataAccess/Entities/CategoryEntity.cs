@@ -2,11 +2,19 @@
 
 namespace DataAccess.Entities
 {
-    public class CategoryEntity : GuidEntity
+    public class CategoryEntity : 
+        GuidEntity,
+        ICreatedEntity
     {
         public string Name { get; set; }
 
+        public DateTime CreatedAt { get; set; }
+        
+        public Guid CreatedBy { get; set; }
+
         #region Relationships
+        public SystemAccountEntity Creator { get; set; }
+
         public IEnumerable<ProductEntity> Products { get; set; }
         #endregion
 

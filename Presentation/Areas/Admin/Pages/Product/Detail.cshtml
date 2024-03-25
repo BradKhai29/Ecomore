@@ -1,0 +1,7 @@
+﻿@page "{productId:guid?}"
+@using DTOs.Implementation.Products.Outgoings
+@using DataAccess.Entities
+@model Presentation.Areas.Admin.Pages.Product.DetailModel
+
+
+@await Component.InvokeAsync(nameof(Presentation.Pages.Shared.Components.ProductDetail))

@@ -1,0 +1,45 @@
+﻿@page
+@model Presentation.Pages.Auth.LoginModel
+@{
+}
+
+<section class="container-fluid py-5" style="background: url(/images/home_bg.jpg) no-repeat; background-size: cover;">
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        <div class="col-md-10 mx-auto mb-3 col-lg-5">
+            <div class="alert alert-danger fw-bold border-2 border-danger alert-dismissible fade show" role="alert">
+                <strong>Warning:</strong> @Model.ErrorMessage !
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+    }
+    <div class="col-md-10 mx-auto col-lg-5">
+        <form class="p-4 p-md-5 border rounded-3 bg-light needs-validation" method="post" novalidate>
+            <h3 class="text-center mb-3">Sign In</h3>
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" asp-for="@Model.LoginDto.UsernameOrEmail" required>
+                <label asp-for="@Model.LoginDto.UsernameOrEmail">Username or email address</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="password" class="form-control" asp-for="@Model.LoginDto.Password" required>
+                <label asp-for="@Model.LoginDto.UsernameOrEmail">Password</label>
+            </div>
+            <div class="checkbox mb-3 d-flex justify-content-between">
+                <label>
+                    <input type="checkbox" asp-for="@Model.LoginDto.RememberMe"> Remember me
+                </label>
+                <p>Forgot your <a href="Auth/forgot-password" class="text-decoration-none fw-bold text-primary">password ?</a></p>
+            </div>
+            <button class="w-100 btn btn-lg btn-dark fw-bold" type="submit">Sign In</button>
+            <button class="mt-3 w-100 btn btn-lg btn-dark fw-bold" type="submit">
+                <i class="fa-brands fa-google"></i>
+                <span class="ms-2">Sign In with Google account</span>
+            </button>
+            <p class="mt-3 text-center">
+                Do not have an account? <a href="/Auth/Register" class="text-decoration-none fw-bold text-primary">Sign up</a>
+            </p>
+            <hr class="my-4">
+        </form>
+    </div>
+</section>
+<script src="~/js/form_validation.js"></script>

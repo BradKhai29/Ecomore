@@ -8,7 +8,13 @@ namespace BusinessLogic.Services.Externals.Base
 {
     public interface IShoppingCartHandlingService
     {
-        Task<IEnumerable<ProductEntity>> GetProductsFromShoppingCartAsync(
+        /// <summary>
+        ///     Return a list contains all cart-items in the shopping cart.
+        /// </summary>
+        /// <param name="shoppingCartDto"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task<IEnumerable<CartItemDto>> GetItemsFromShoppingCartAsync(
             ShoppingCartDto shoppingCartDto,
             CancellationToken cancellationToken);
     }

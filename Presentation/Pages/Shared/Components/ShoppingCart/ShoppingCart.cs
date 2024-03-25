@@ -1,6 +1,6 @@
 using BusinessLogic.Services.Externals.Base;
 using Microsoft.AspNetCore.Mvc;
-using Presentation.ExtensionMethods.Others;
+using Presentation.ExtensionMethods.HttpContexts;
 
 namespace Presentation.Pages.Shared.Components.ShoppingCart
 {
@@ -20,14 +20,13 @@ namespace Presentation.Pages.Shared.Components.ShoppingCart
         {
             var shoppingCart = HttpContext.GetShoppingCart();
 
-            var products = await _shoppingCartHandlingService.GetProductsFromShoppingCartAsync(
+            var cartItems = await _shoppingCartHandlingService.GetItemsFromShoppingCartAsync(
                 shoppingCartDto: shoppingCart,
                 cancellationToken: cancellationToken);
 
-            ViewData[nameof(ShoppingCart)] = products;
-            ViewData["Total"] = products.Sum(item => item.QuantityInStock * item.UnitPrice);
+            ViewData[nameof(ShoppingCart)] = cartItems;
 
-            return View();
+            return View(nameof(ShoppingCart));
         }
     }
 }

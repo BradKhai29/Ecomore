@@ -1,6 +1,7 @@
 ﻿@page
 @model Presentation.Pages.ShoppingCart.IndexModel
 @{
+    ViewData["DisplayShoppingCart"] = false;
 }
 
 <div class="row">
@@ -9,71 +10,72 @@
     </h3>
 </div>
 
-<section id="cart-items" class="row my-4">
-    <table class="rounded-3">
-        <thead class="d-none d-md-table-row bg-dark rounded">
-            <tr class="d-flex text-light rounded row flex-row py-2 mx-0">
-                    <th class="col-1 p-0">
-                        <div class="text-center invisible" style="width: 4rem;">
-                            <i class="fa-regular fa-circle-xmark"></i>
-                        </div>
-                    </th>
-                    <th class="col-1 p-0"></th>
-                    <th class="col">Product</th>
-                    <th class="col-2">Unit Price</th>
-                    <th class="col-2">Quantity</th>
-                    <th class="col-2">Subtotal</th>
+<div class="container">
+    <section id="cart-items" class="row my-4">
+        <table class="rounded-3">
+            <thead class="d-none d-md-table-row bg-dark rounded">
+                <tr class="d-flex text-light rounded row flex-row py-2 mx-0">
+                        <th class="col-1 p-0">
+                            <div class="text-center invisible" style="width: 4rem;">
+                                <i class="fa-regular fa-circle-xmark"></i>
+                            </div>
+                        </th>
+                        <th class="col-1 p-0"></th>
+                        <th class="col">Product</th>
+                        <th class="col-2">Unit Price</th>
+                        <th class="col-2">Quantity</th>
+                        <th class="col-2">Subtotal</th>
                 
-            </tr>
-        </thead>
-        <tbody class="bg-light">
-            @for(int i = 0; i < 5; i++)
-            {
-            <tr class="d-flex border border-2 row flex-row py-2 mx-0">
-                <td class="col-12 col-md-1 d-flex align-items-center">
-                    <i class="m-auto fa-regular fa-xl fa-circle-xmark"></i>
-                </td>
-                <td class="col-12 col-md-1">
-                    <img class="rounded w-100"
-                            src="https://media.post.rvohealth.io/wp-content/uploads/2020/09/AN141-Nuts-In-Wooden-Bowl-732x549-thumb.jpg" />
-                </td>
-                <th class="col d-flex align-items-center"><span class="">Hạt hạnh nhân phô mai</span></th>
-                <th class="col-md-2 d-flex align-items-center"><span class="">150.000 VND</span></th>
-                <th class="col-md-2 d-flex align-items-center"><span class="">30</span></th>
-                <th class="col-md-2 d-flex align-items-center"><span class="">4.500.000 VND</span></th>
-            </tr>
-            }
-        </tbody>
-        <tfoot class="bg-dark">
-            <tr class="d-flex text-light rounded flex-row py-2 mx-0">
-                <td class="ms-4">
-                    <input class="form-control rounded-0 border-2 border-success"/>
-                </td>
-                <td class="ms-2">
-                    <button class="btn btn-success rounded-0 fw-bold">Apply Coupon</button>
-                </td>
-                <td class="ms-auto me-5 pe-3">
-                    <button class="btn btn-warning rounded-0 fw-bold">Update Cart</button>
-                </td>
-            </tr>
-        </tfoot>
-    </table>
-</section>
-<section class="row my-3">
-    <div class="col-12 col-md-6 ms-auto p-0">
-        <div class="h5 m-0 px-4 bg-success bg-opacity-75 py-2 rounded-top">Cart totals</div>
-        <section class="px-4 bg-success bg-opacity-25 rounded-bottom">
-            <div class="d-flex py-2 border-2 border-bottom border-dark justify-content-between">
-                <span class="h5 m-0">Subtotal</span>
-                <span class="h5 m-0">4.500.000 VND</span>
-            </div>
-            <div class="d-flex py-2 border-2 border-bottom border-dark justify-content-between">
-                <span class="h5 m-0">Total</span>
-                <span class="h5 m-0">4.500.000 VND</span>
-            </div>
-            <div class="d-flex py-2 justify-content-end">
-                <button class="btn btn-danger px-5 rounded fw-bold">Checkout</button>
-            </div>
-        </section>
-    </div>
-</section>
+                </tr>
+            </thead>
+            <tbody class="bg-light">
+                @foreach(var item in Model.CartItems)
+                {
+                <tr class="d-flex border border-2 row flex-row py-2 mx-0">
+                    <td id="@item.ProductId" class="col-12 col-md-1 d-flex align-items-center">
+                        <i class="m-auto fa-regular fa-xl fa-circle-xmark"></i>
+                    </td>
+                    <td class="col-12 col-md-1">
+                        <img class="rounded w-100" src="@item.ImageUrl" />
+                    </td>
+                    <th class="col d-flex align-items-center"><span>@item.ProductName</span></th>
+                    <th class="col-md-2 d-flex align-items-center"><span>@item.UnitPrice VND</span></th>
+                    <th class="col-md-2 d-flex align-items-center"><span>@item.Quantity</span></th>
+                    <th class="col-md-2 d-flex align-items-center"><span>@item.SubTotal VND</span></th>
+                </tr>
+                }
+            </tbody>
+            <tfoot class="bg-dark">
+                <tr class="d-flex text-light rounded flex-row py-2 mx-0">
+                    <td class="ms-4">
+                        <input class="form-control rounded-0 border-2 border-success"/>
+                    </td>
+                    <td class="ms-2">
+                        <button class="btn btn-success rounded-0 fw-bold">Apply Coupon</button>
+                    </td>
+                    <td class="ms-auto me-5 pe-3">
+                        <button class="btn btn-warning rounded-0 fw-bold">Update Cart</button>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </section>
+    <section class="row my-3">
+        <div class="col-12 col-md-6 ms-auto p-0">
+            <div class="h5 m-0 px-4 bg-success bg-opacity-75 py-2 rounded-top">Cart totals</div>
+            <section class="px-4 bg-success bg-opacity-25 rounded-bottom">
+                <div class="d-flex py-2 border-2 border-bottom border-dark justify-content-between">
+                    <span class="h5 m-0">Subtotal</span>
+                    <span class="h5 m-0">@Model.Total VND</span>
+                </div>
+                <div class="d-flex py-2 border-2 border-bottom border-dark justify-content-between">
+                    <span class="h5 m-0">Total</span>
+                    <span class="h5 m-0">@Model.Total VND</span>
+                </div>
+                <div class="d-flex py-2 justify-content-end">
+                    <a href="/Checkout" class="btn btn-danger px-5 rounded fw-bold">Checkout</a>
+                </div>
+            </section>
+        </div>
+    </section>
+</div>

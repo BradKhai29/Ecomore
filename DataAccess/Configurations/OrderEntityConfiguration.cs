@@ -37,7 +37,7 @@ namespace DataAccess.Configurations
                 .IsRequired();
 
             builder
-                .Property(order => order.UserNote)
+                .Property(order => order.OrderNote)
                 .HasColumnType(SqlDataTypes.SqlServer.NVARCHAR_500)
                 .IsRequired(false);
 
@@ -74,6 +74,8 @@ namespace DataAccess.Configurations
             builder
                 .HasMany(order => order.OrderItems)
                 .WithOne(orderItem => orderItem.Order)
+                .HasPrincipalKey(order => order.Id)
+                .HasForeignKey(orderItem => orderItem.OrderId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder

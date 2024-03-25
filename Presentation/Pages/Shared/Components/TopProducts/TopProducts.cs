@@ -1,4 +1,7 @@
 using BusinessLogic.Services.Cores.Base;
+using DTOs.Implementation.Categories.Outgoings;
+using DTOs.Implementation.Products.Outgoings;
+using DTOs.Implementation.ProductStatuses.Outgoings;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Presentation.Pages.Shared.Components.TopProducts
@@ -20,9 +23,27 @@ namespace Presentation.Pages.Shared.Components.TopProducts
                 pageSize: 4,
                 cancellationToken: cancellationToken);
 
-            ViewData[nameof(TopProducts)] = products;
+            var detailDisplayProducts = products.Select(product => new DetailDisplayProductForUserDto()
+            {
+                Id = product.Id,
+                Category = new GetCategoryByIdDto
+                {
+                    Id = product.CategoryId,
+                    Name  = product.Category.Name,
+                },
+                Name = product.Name,
+                ProductStatus = new GetProductStatusByIdDto
+                {
+                    Id = product.ProductStatusId,
+                    Name = product.ProductStatus.Name
+                },
+                UnitPrice = product.UnitPrice,
+                ImageUrls = product.ProductImages.Select(image => image.StorageUrl),
+            });
 
-            return View();
+            ViewData[nameof(TopProducts)] = detailDisplayProducts;
+
+            return View(nameof(TopProducts));
         }
     }
 }

@@ -1,0 +1,66 @@
+﻿@page
+@model Presentation.Areas.Admin.Pages.IndexModel
+@{
+}
+<div id="layoutSidenav">
+    <div id="layoutSidenav_content">
+        <div class="container-fluid px-4">
+                <h1 class="mt-4 mb-2">Dashboard</h1>
+                <div class="row fw-bold">
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card bg-danger bg-opacity-75 text-white mb-4">
+                            <div class="card-body">Categories</div>
+                            <div class="card-footer d-flex align-items-center justify-content-between">
+                                <a class="small text-white stretched-link" href="/Admin/Category">View Details</a>
+                                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card bg-primary text-white mb-4">
+                            <div class="card-body">Products</div>
+                            <div class="card-footer d-flex align-items-center justify-content-between">
+                                <a class="small text-white stretched-link" href="/Admin/Product">View Details</a>
+                                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card bg-danger bg-opacity-75 text-white mb-4">
+                            <div class="card-body d-flex justify-content-between">
+                                <span>Customers</span>
+                                <span class="badge bg-dark">3</span>
+                            </div>
+                            <div class="card-footer d-flex align-items-center justify-content-between">
+                                <a class="small text-white stretched-link" href="/Admin/Customer">View Details</a>
+                                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card bg-primary text-white mb-4">
+                            <div class="card-body">Orders</div>
+                            <div class="card-footer d-flex align-items-center justify-content-between">
+                                <a class="small text-white stretched-link" href="/Admin/Order">View Details</a>
+                                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <footer class="py-4 bg-light position-fixed bottom-0 end-0 start-0">
+            <div class="container-fluid px-4">
+                <div class="d-flex align-items-center justify-content-between small">
+                    <div class="text-muted">Copyright &copy; Your Website 2024</div>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+
+<script src="~/js/scripts.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+<script src="~/assets/demo/chart-area-demo.js"></script>
+<script src="~/assets/demo/chart-bar-demo.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
+<script src="~/js/datatables-simple-demo.js"></script>

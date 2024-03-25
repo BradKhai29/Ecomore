@@ -15,7 +15,7 @@ namespace DTOs.Implementation.ShoppingCarts.Incomings
 
         [Required]
         [IsValidGuid]
-        public Guid CustomerId { get; set; }
+        public Guid GuestId { get; set; }
 
         public IList<CartItemDto> CartItems { get; set; }
 
@@ -46,6 +46,11 @@ namespace DTOs.Implementation.ShoppingCarts.Incomings
             }
         }
 
+        public void Clear()
+        {
+            CartItems.Clear();
+        }
+
         public void RemoveInvalidItems()
         {
             if (CartItems != null && CartItems.Count > 0)
@@ -68,18 +73,18 @@ namespace DTOs.Implementation.ShoppingCarts.Incomings
         }
 
         /// <summary>
-        ///     Verify if the input <paramref name="customerId"/> is
-        ///     similar with this shopping cart <see cref="CustomerId"/>
+        ///     Verify if the input <paramref name="guestId"/> is
+        ///     similar with this shopping cart <see cref="GuestId"/>
         /// </summary>
-        /// <param name="customerId">
+        /// <param name="guestId">
         ///     The input customerId to verify.
         /// </param>
         /// <returns>
         ///     The verification result.
         /// </returns>
-        public bool VerifyCustomerId(Guid customerId)
+        public bool VerifyGuestId(Guid guestId)
         {
-            return CustomerId.Equals(customerId);
+            return GuestId.Equals(guestId);
         }
 
         public int NumberOfItems()

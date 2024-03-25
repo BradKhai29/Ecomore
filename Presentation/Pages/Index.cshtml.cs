@@ -21,9 +21,9 @@ namespace Presentation.Pages
 
         public async Task<IActionResult> OnGetAsync(CancellationToken cancellationToken)
         {
-            Products = await _productHandlingService.GetAllAsync(cancellationToken: cancellationToken);
+            //Products = await _productHandlingService.GetAllAsync(cancellationToken: cancellationToken);
             
-            //Products = new List<ProductEntity>();
+            Products = new List<ProductEntity>();
             return Page();
         }
     }

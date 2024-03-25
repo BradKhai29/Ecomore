@@ -19,13 +19,21 @@ namespace DataAccess.Entities
         #region Relationships
         public AccountStatusEntity AccountStatus { get; set; }
 
+        public IEnumerable<SystemAccountTokenEntity> SystemAccountTokens { get; set; }
+
         public IEnumerable<SystemAccountRoleEntity> SystemAccountRoles { get; set; }
 
         public IEnumerable<OrderEntity> ManagedOrders { get; set; }
 
+        public IEnumerable<CategoryEntity> CreatedCategories { get; set; }
+
         public IEnumerable<ProductEntity> CreatedProducts { get; set; }
 
         public IEnumerable<ProductEntity> UpdatedProducts { get; set; }
+
+        public IEnumerable<BlogEntity> CreatedBlogs { get; set; }
+
+        public IEnumerable<BlogEntity> VerifiedBlogs { get; set; }
         #endregion
 
         #region MetaData

@@ -1,5 +1,42 @@
 ﻿@page
 @model Presentation.Pages.Product.IndexModel
 @{
-    <div>This is products</div>
 }
+
+<section class="container-fluid">
+    <div class="row">
+        <div class="col-12 col-md-6 bg-light py-3">
+            <h3 class="fw-bold display-6">Fresh Nuts</h3>
+            <p class="border-bottom border-dark border-2 pb-3">
+                These are Organic nuts,<br/>
+                100% standard from Daklak agricultural products.
+            </p>
+            <div class="d-flex">
+                <img style="width: 200px" class="rounded-3"
+                src="https://hatdieu.org/storage/images/KvJ3X2M3Y5rUooJrpe0Zj3ortdMiUbuZeSX2A3gD.jpeg" />
+                <p class="ms-3">Customer experience is Ecomore's honor to strive harder to bring customers the best quality.</p>
+            </div>
+        </div>
+        <ul class="col-12 p-0 col-md-6">
+            @for(int i = 0; i < 4; i++)
+            {
+                <li class="d-flex @(i % 2 != 0 ? "flex-row-reverse" : "")">
+                    <div class="w-50 position-relative" style="height: 200px;">
+                        <img class="w-100 h-100 opacity-50" src="https://tuikhoeconban.com/wp-content/uploads/2019/03/cau-hoi-ve-hat-dinh-duong.jpg" />
+                        <div class="bg-dark bg-opacity-50 position-absolute top-0 end-0 start-0 bottom-0 d-flex flex-column">
+                            <h3 class="align-self-center my-auto text-light">Macadamia Nuts</h3>
+                            <p class="text-center">
+                                <a class="text-decoration-underline text-light" href="#">Shop Now 
+                                    <i class="fa-solid fa-arrow-right"></i>
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                    <div style="height: 200px" class="w-50">
+                        <img class="w-100 h-100" src="https://bizweb.dktcdn.net/100/176/332/articles/58199792-l-1.jpg?v=1501336848027" />
+                    </div>
+                </li>
+            }
+        </ul>
+    </div>
+</section>

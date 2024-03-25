@@ -16,6 +16,7 @@ services.AddBusinessLogic();
 
 #region Presentation Configuration
 services.AddOptionsConfiguration();
+services.AddAuthenticationConfiguration();
 services.AddCustomCookieConfiguration();
 services.AddWebApiConfiguration();
 services.AddRazorPages();
@@ -37,8 +38,9 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthentication();
-app.UseMiddleware<CustomerIdCookieMiddleware>();
 app.UseAuthorization();
+app.UseMiddleware<GuestIdCookieMiddleware>();
+app.UseMiddleware<CustomAuthenticationMiddleware>();
 
 app.MapRazorPages();
 app.MapControllers();

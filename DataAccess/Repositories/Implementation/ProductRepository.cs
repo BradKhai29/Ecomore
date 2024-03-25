@@ -1,4 +1,5 @@
-﻿using DataAccess.Entities;
+﻿using DataAccess.DataSeedings;
+using DataAccess.Entities;
 using DataAccess.Repositories.Base;
 using DataAccess.Repositories.Base.Generics;
 using Microsoft.EntityFrameworkCore;
@@ -26,14 +27,43 @@ namespace DataAccess.Repositories.Implementation
                 .Where(product => product.Id.Equals(productId))
                 .ExecuteUpdateAsync(product => product
                     .SetProperty(
-                        product => product.IsAvailable,
-                        product => false)
+                        product => product.ProductStatusId,
+                        product => ProductStatuses.NotAvailable.Id)
                     .SetProperty(
                         product => product.UpdatedAt,
                         product => updatedAt)
                     .SetProperty(
                         product => product.UpdatedBy,
                         product => updatedBy),
+                cancellationToken: cancellationToken);
+        }
+
+        public Task<int> BulkUpdateAsync(ProductEntity updatedProduct, CancellationToken cancellationToken)
+        {
+            return _dbSet
+                .Where(product => product.Id.Equals(updatedProduct.Id))
+                .ExecuteUpdateAsync(product => product
+                    .SetProperty(
+                        product => product.Name,
+                        product => updatedProduct.Name)
+                    .SetProperty(
+                        product => product.CategoryId,
+                        product => updatedProduct.CategoryId)
+                    .SetProperty(
+                        product => product.Description,
+                        product => updatedProduct.Description)
+                    .SetProperty(
+                        product => product.QuantityInStock,
+                        product => updatedProduct.QuantityInStock)
+                    .SetProperty(
+                        product => product.UnitPrice,
+                        product => updatedProduct.UnitPrice)
+                    .SetProperty(
+                        product => product.ProductStatusId,
+                        product => updatedProduct.ProductStatusId)
+                    .SetProperty(
+                        product => product.UpdatedAt,
+                        product => updatedProduct.UpdatedAt),
                 cancellationToken: cancellationToken);
         }
 
@@ -61,7 +91,7 @@ namespace DataAccess.Repositories.Implementation
                     },
                     Name = product.Name,
                     Description = product.Description,
-                    IsAvailable = product.IsAvailable,
+                    ProductStatusId = product.ProductStatusId,
                     UnitPrice = product.UnitPrice,
                     QuantityInStock = product.QuantityInStock,
                     ProductImages = product.ProductImages.Select(image => new ProductImageEntity
@@ -69,7 +99,12 @@ namespace DataAccess.Repositories.Implementation
                         Id = image.Id,
                         FileName = image.FileName,
                         StorageUrl = image.StorageUrl,
-                    })
+                    }),
+                    ProductStatus = new ProductStatusEntity
+                    {
+                        Id = product.ProductStatusId,
+                        Name = product.ProductStatus.Name
+                    },
                 })
                 .FirstOrDefaultAsync(cancellationToken: cancellationToken);
         }
@@ -110,7 +145,7 @@ namespace DataAccess.Repositories.Implementation
                     },
                     Name = product.Name,
                     Description = product.Description,
-                    IsAvailable = product.IsAvailable,
+                    ProductStatusId = product.ProductStatusId,
                     UnitPrice = product.UnitPrice,
                     QuantityInStock = product.QuantityInStock,
                     ProductImages = product.ProductImages.Select(image => new ProductImageEntity
@@ -140,7 +175,7 @@ namespace DataAccess.Repositories.Implementation
                     },
                     Name = product.Name,
                     Description = product.Description,
-                    IsAvailable = product.IsAvailable,
+                    ProductStatusId = product.ProductStatusId,
                     UnitPrice = product.UnitPrice,
                     QuantityInStock = product.QuantityInStock,
                     ProductImages = product.ProductImages.Select(image => new ProductImageEntity
@@ -180,7 +215,7 @@ namespace DataAccess.Repositories.Implementation
                     },
                     Name = product.Name,
                     Description = product.Description,
-                    IsAvailable = product.IsAvailable,
+                    ProductStatusId = product.ProductStatusId,
                     UnitPrice = product.UnitPrice,
                     QuantityInStock = product.QuantityInStock,
                     ProductImages = product.ProductImages.Select(image => new ProductImageEntity
@@ -188,7 +223,12 @@ namespace DataAccess.Repositories.Implementation
                         Id = image.Id,
                         FileName = image.FileName,
                         StorageUrl = image.StorageUrl,
-                    })
+                    }),
+                    ProductStatus = new ProductStatusEntity
+                    {
+                        Id = product.ProductStatusId,
+                        Name = product.ProductStatus.Name
+                    },
                 })
                 .ToListAsync(cancellationToken: cancellationToken);
         }

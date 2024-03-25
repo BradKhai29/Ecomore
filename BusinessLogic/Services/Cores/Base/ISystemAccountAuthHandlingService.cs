@@ -9,14 +9,23 @@ namespace BusinessLogic.Services.Cores.Base
 {
     public interface ISystemAccountAuthHandlingService
     {
-        Task<IResult<SystemAccountEntity>> LoginAsync(
+        Task<IResult<SystemAccountEntity>> LoginByUserNameAsync(
             string username,
             string password,
             CancellationToken cancellationToken);
 
-        Task<bool> IsUsernameExistedAsync(string username, CancellationToken cancellationToken);
+        Task<IResult<SystemAccountEntity>> LoginByEmailAsync(
+            string email,
+            string password,
+            CancellationToken cancellationToken);
 
-        Task<bool> IsEmailExistedAsync(string email, CancellationToken cancellationToken);
+        Task<bool> IsUsernameExistedAsync(
+            string username,
+            CancellationToken cancellationToken);
+
+        Task<bool> IsEmailExistedAsync(
+            string email,
+            CancellationToken cancellationToken);
 
         /// <summary>
         ///     Process to register a new user account with provided register info.
@@ -31,6 +40,8 @@ namespace BusinessLogic.Services.Cores.Base
         Task<IResult<Guid>> RegisterAsync(
             RegisterDto registerDto,
             CancellationToken cancellationToken);
+
+        Task<IResult<Guid>> RegisterDefaultAccountAsync(CancellationToken cancellationToken);
 
         Task<bool> ConfirmEmailAsync(
             SystemAccountEntity systemAccount,

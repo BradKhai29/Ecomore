@@ -15,8 +15,8 @@ public class PasswordHashOptionsSetup : IConfigureOptions<PasswordHashOptions>
     public void Configure(PasswordHashOptions options)
     {
         _configuration
-            .GetRequiredSection(JwtOptions.ParentSectionName)
-            .GetRequiredSection(key: JwtOptions.SectionName)
+            .GetRequiredSection(PasswordHashOptions.ParentSectionName)
+            .GetRequiredSection(key: PasswordHashOptions.SectionName)
             .Bind(instance: options);
     }
 }

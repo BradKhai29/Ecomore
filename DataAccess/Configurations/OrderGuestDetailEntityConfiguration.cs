@@ -16,7 +16,7 @@ namespace DataAccess.Configurations
 
             builder
                 .Property(detail => detail.GuestName)
-                .HasColumnType(SqlDataTypes.SqlServer.NVARCHAR_50)
+                .HasColumnType(SqlDataTypes.SqlServer.NVARCHAR_200)
                 .IsRequired();
 
             builder

@@ -1,7 +1,7 @@
 ﻿using BusinessLogic.Services.Cores.Base;
 using DTOs.Implementation.ShoppingCarts.Incomings;
 using Microsoft.AspNetCore.Mvc;
-using Presentation.ExtensionMethods.Others;
+using Presentation.ExtensionMethods.HttpContexts;
 using Presentation.Models;
 using System.ComponentModel.DataAnnotations;
 using System.Net.Mime;

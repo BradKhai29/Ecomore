@@ -1,0 +1,82 @@
+﻿@page
+@model Presentation.Pages.Blogs.IndexModel
+@{
+    ViewData["Blogs"] = true;
+}
+<section class="container my-4">
+    <div class="p-4 p-md-5 mb-4 text-white rounded bg-dark" style="background: url(/images/blog_bg.jpg) no-repeat; background-size: cover;">
+        <div class="px-0">
+            <h1 class="display-4 fst-italic fw-bold">
+                This is the place to share EcoMorə articles,
+                Hope to bring useful articles to everyone.
+            </h1>
+            <p class="lead my-3 fw-bold">Many interesting blogs are waiting for you.</p>
+            <p class="lead mb-0"><a href="#" class="text-white fw-bold">Continue reading...</a></p>
+        </div>
+    </div>
+
+    <!-- Newest blogs section -->
+    <div class="row mb-2">
+        <div class="col-12">
+            <h3 class="pb-4 mb-4 fst-italic border-bottom border-2">
+                Newest Blogs
+            </h3>
+        </div>
+        <div class="col-md-6">
+            <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                <div class="col p-4 d-flex flex-column position-static">
+                    <strong class="d-inline-block mb-2 text-primary">Sức khỏe</strong>
+                    <h3 class="mb-0">Lợi ích tuyệt vời từ hạt dinh dưỡng Organic</h3>
+                    <div class="mb-1 text-muted mt-3">Jan 12, 2024</div>
+                    <p class="card-text mb-auto">Hạt dinh dưỡng là phần nhân nằm bên trong lớp vỏ cứng được hình thành từ nhụy hoa ...</p>
+                    <a href="#" class="stretched-link mt-3">Continue reading</a>
+                </div>
+                <div class="col-auto d-none d-lg-block d-flex">
+                    <img width="200" class="h-100"
+                        src="https://veggie.vn/uploads/details/2022/08/images/hat-dinh-duong-la-gi-va-co-tot-khong-1.jpg" />
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                <div class="col p-4 d-flex flex-column position-static">
+                    <strong class="d-inline-block mb-2 text-success">Ăn uống</strong>
+                    <h3 class="mb-0">Lợi ích tuyệt vời từ hạt dinh dưỡng Organic</h3>
+                    <div class="mb-1 text-muted mt-3">Jan 12, 2024</div>
+                    <p class="card-text mb-auto">Hạt dinh dưỡng là phần nhân nằm bên trong lớp vỏ cứng được hình thành từ nhụy hoa ...</p>
+                    <a href="#" class="stretched-link mt-3">Continue reading</a>
+                </div>
+                <div class="col-auto d-none d-lg-block d-flex">
+                    <img width="200" class="h-100"
+                         src="https://bizweb.dktcdn.net/100/357/495/articles/banh-ngu-coc-an-kieng-baker-baking-blog-65-a2f1bdee-be2d-4e66-9ec3-10404111f2f4.jpg?v=1608093931530" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Common blogs section -->
+    <h3 class="pb-4 mb-4 fst-italic border-bottom border-2">Other Blogs</h3>
+    <section class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+        @for(int i = 0; i < 6; i++)
+        {
+            <div class="col">
+                <div class="card shadow-sm rounded-3">
+                    <div style="height: 220px; background: url(/images/home_bg.jpg) no-repeat; background-size: cover;"
+                        class="rounded-top">
+                        <p class="p-3 text-end">
+                            <span class="fw-bold btn btn-success">Ăn uống</span>
+                        </p>
+                    </div>
+                    <div class="card-body">
+                        <h5>Lợi ích tuyệt vời từ hạt dinh dưỡng Organic</h5>
+                        <p class="card-text">Có rất nhiều loại hạt dinh dưỡng tốt cho sức khỏe, tiêu biểu như: hạt điều, óc chó, mắc ca, hạt dẻ cười, hạt dẻ, hồ đào,… </p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <button type="button" class="btn btn-sm btn-outline-success px-3">Read now</button>
+                            <small class="text-muted">Nov 9, 2023</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </section>
+</section>
+

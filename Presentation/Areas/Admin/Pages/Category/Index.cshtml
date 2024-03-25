@@ -1,0 +1,117 @@
+﻿@page
+@model Presentation.Areas.Admin.Pages.Category.IndexModel
+@{
+    int lastIndex = 0;
+    const string createModalId = "createModal";
+    const string editModalId = "editModal";
+    const string categoryTotalProductsId = "category-total-products";
+
+    const string createNameInputId = "createCategoryName";
+    const string editIdInputId = "categoryId";
+    const string editNameInputId = "categoryName";
+}
+
+<section class="container">
+    <div class="row mt-5 p-3">
+        <div class="col-12 col-md-10 mx-auto">
+            <table class="table table-dark table-hover rounded-3 table-striped table-responsive text-white">
+                <thead>
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col" class="">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span>Category Name</span>
+                                <button class="btn btn-success fw-bold" data-bs-toggle="modal" data-bs-target="#@createModalId">Add new</button>
+                            </div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="category-items" last_category_index="@Model.Categories.Count()">
+                    @foreach(var item in Model.Categories)
+                    {
+                        {
+                            lastIndex++; 
+                        }
+                        <tr class="category-item" id="@item.Id" onclick="ShowEditModal(event);">
+                            <td id="@categoryTotalProductsId" class="d-none" value="@item.TotalProducts"/>
+                            <td scope="col" class="text-center">
+                                <button class="btn text-light fw-bold">@(lastIndex)</button>
+                            </td>
+                            <td scope="col">
+                                <div class="d-flex justify-content-between">
+                                    <p href="#" class="m-0 d-flex fw-bold text-decoration-none text-light" >
+                                        <span class="category-name my-auto">@item.Name</span>
+                                    </p>
+                                    <div>
+                                        <a href="/Admin/Category/Detail/@item.Id" class="btn btn-primary fw-bold">Details</a>
+                                        <button data-bs-toggle="modal" data-bs-target="#@editModalId" class="btn btn-secondary fw-bold">
+                                            Edit
+                                        </button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    }          
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- Create Modal -->
+    <section class="modal fade" id="@createModalId" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Create a new category</h1>
+                    <button type="button" class="btn-close" onclick="HideCreateModal();" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">Category Name</span>
+                        <input type="text" class="form-control" placeholder="Enter category name"
+                               aria-label="Category Name" id="@createNameInputId">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="HideCreateModal();">Close</button>
+                    <button id="createButton" type="button" class="btn btn-primary" onclick="CreateNewCategory();">Create</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Edit Modal -->
+    <section class="modal fade" id="@editModalId" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel"></h1>
+                    <button type="button" class="btn-close" onclick="CloseEditModal();" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body py-0">
+                    <div class="py-2 mb-3 border-bottom border-3">
+                        This category has <span class="fw-bold text-primary" id="@categoryTotalProductsId">0</span> products.
+                    </div>
+                    <div class="input-group mb-3">
+                        <input class="current-edit-category" id="@editIdInputId" hidden/>
+                        <span class="input-group-text rounded-start fw-bold bg-dark text-light">Category Name</span>
+                        <input type="text" class="form-control" placeholder="Enter category name"
+                               aria-label="Category Name" id="@editNameInputId" disabled>
+                    </div>
+                </div>
+                <section class="modal-footer justify-content-between">
+                    <div>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" onclick="DeleteCategory();">
+                            Delete
+                        </button>
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="CloseEditModal();">Close</button>
+                        <button id="editButton" type="button" class="btn btn-primary" onclick="TurnOnEditMode();">Edit</button>
+                        <button id="confirmButton" type="button" class="btn btn-danger" onclick="ConfirmEdit();" hidden>Confirm</button>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </section>
+    <script src="~/js/admin/admin_category.js"></script>
+</section>

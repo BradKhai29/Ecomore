@@ -40,10 +40,52 @@ namespace DataAccess.Migrations
                     b.ToTable("AccountStatuses", (string)null);
                 });
 
+            modelBuilder.Entity("DataAccess.Entities.BlogEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsVerifiedToUpload")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("VerifiedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("VerifiedBy");
+
+                    b.ToTable("BlogEntity");
+                });
+
             modelBuilder.Entity("DataAccess.Entities.CategoryEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("DATETIME");
+
+                    b.Property<Guid>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
@@ -51,6 +93,8 @@ namespace DataAccess.Migrations
                         .HasColumnType("NVARCHAR(50)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CreatedBy");
 
                     b.HasIndex("Name")
                         .IsUnique();
@@ -79,6 +123,9 @@ namespace DataAccess.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValue(new Guid("00000000-0000-0000-0000-000000000000"));
 
+                    b.Property<string>("OrderNote")
+                        .HasColumnType("NVARCHAR(500)");
+
                     b.Property<Guid>("PaymentMethodId")
                         .HasColumnType("uniqueidentifier");
 
@@ -100,9 +147,6 @@ namespace DataAccess.Migrations
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("UserNote")
-                        .HasColumnType("NVARCHAR(500)");
 
                     b.HasKey("Id");
 
@@ -128,7 +172,7 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("GuestName")
                         .IsRequired()
-                        .HasColumnType("NVARCHAR(50)");
+                        .HasColumnType("NVARCHAR(200)");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
@@ -217,14 +261,12 @@ namespace DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("NVARCHAR(500)");
 
-                    b.Property<bool>("IsAvailable")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("NVARCHAR(200)");
+
+                    b.Property<Guid>("ProductStatusId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("QuantityInStock")
                         .HasColumnType("int");
@@ -243,6 +285,8 @@ namespace DataAccess.Migrations
                     b.HasIndex("CategoryId");
 
                     b.HasIndex("CreatedBy");
+
+                    b.HasIndex("ProductStatusId");
 
                     b.HasIndex("UpdatedBy");
 
@@ -266,11 +310,34 @@ namespace DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("VARCHAR(200)");
 
+                    b.Property<int>("UploadOrder")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ProductId");
 
                     b.ToTable("ProductImages", (string)null);
+                });
+
+            modelBuilder.Entity("DataAccess.Entities.ProductStatusEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("NVARCHAR(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("Name"), false);
+
+                    b.ToTable("ProductStatuses", (string)null);
                 });
 
             modelBuilder.Entity("DataAccess.Entities.RoleEntity", b =>
@@ -359,6 +426,39 @@ namespace DataAccess.Migrations
                     b.ToTable("SystemAccountRoles", (string)null);
                 });
 
+            modelBuilder.Entity("DataAccess.Entities.SystemAccountTokenEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("ExpiredAt")
+                        .HasColumnType("DATETIME");
+
+                    b.Property<Guid>("SystemAccountId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TokenTypeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SystemAccountId");
+
+                    b.HasIndex("TokenTypeId");
+
+                    b.HasIndex("Value")
+                        .IsUnique();
+
+                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("Value"), false);
+
+                    b.ToTable("SystemAccountTokens", (string)null);
+                });
+
             modelBuilder.Entity("DataAccess.Entities.TokenTypeEntity", b =>
                 {
                     b.Property<Guid>("Id")
@@ -408,6 +508,10 @@ namespace DataAccess.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("NVARCHAR(200)");
 
                     b.Property<bool>("Gender")
                         .HasColumnType("bit");
@@ -667,6 +771,36 @@ namespace DataAccess.Migrations
                     b.HasDiscriminator().HasValue("UserTokenEntity");
                 });
 
+            modelBuilder.Entity("DataAccess.Entities.BlogEntity", b =>
+                {
+                    b.HasOne("DataAccess.Entities.SystemAccountEntity", "Creator")
+                        .WithMany("CreatedBlogs")
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("DataAccess.Entities.SystemAccountEntity", "Verifier")
+                        .WithMany("VerifiedBlogs")
+                        .HasForeignKey("VerifiedBy")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Creator");
+
+                    b.Navigation("Verifier");
+                });
+
+            modelBuilder.Entity("DataAccess.Entities.CategoryEntity", b =>
+                {
+                    b.HasOne("DataAccess.Entities.SystemAccountEntity", "Creator")
+                        .WithMany("CreatedCategories")
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Creator");
+                });
+
             modelBuilder.Entity("DataAccess.Entities.OrderEntity", b =>
                 {
                     b.HasOne("DataAccess.Entities.PaymentMethodEntity", "PaymentMethod")
@@ -737,12 +871,18 @@ namespace DataAccess.Migrations
                     b.HasOne("DataAccess.Entities.CategoryEntity", "Category")
                         .WithMany("Products")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("DataAccess.Entities.SystemAccountEntity", "Creator")
                         .WithMany("CreatedProducts")
                         .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("DataAccess.Entities.ProductStatusEntity", "ProductStatus")
+                        .WithMany("Products")
+                        .HasForeignKey("ProductStatusId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
@@ -755,6 +895,8 @@ namespace DataAccess.Migrations
                     b.Navigation("Category");
 
                     b.Navigation("Creator");
+
+                    b.Navigation("ProductStatus");
 
                     b.Navigation("Updater");
                 });
@@ -798,6 +940,25 @@ namespace DataAccess.Migrations
                     b.Navigation("Role");
 
                     b.Navigation("SystemAccount");
+                });
+
+            modelBuilder.Entity("DataAccess.Entities.SystemAccountTokenEntity", b =>
+                {
+                    b.HasOne("DataAccess.Entities.SystemAccountEntity", "SystemAccount")
+                        .WithMany("SystemAccountTokens")
+                        .HasForeignKey("SystemAccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DataAccess.Entities.TokenTypeEntity", "TokenType")
+                        .WithMany("SystemAccountTokens")
+                        .HasForeignKey("TokenTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("SystemAccount");
+
+                    b.Navigation("TokenType");
                 });
 
             modelBuilder.Entity("DataAccess.Entities.UserEntity", b =>
@@ -909,6 +1070,11 @@ namespace DataAccess.Migrations
                     b.Navigation("ProductImages");
                 });
 
+            modelBuilder.Entity("DataAccess.Entities.ProductStatusEntity", b =>
+                {
+                    b.Navigation("Products");
+                });
+
             modelBuilder.Entity("DataAccess.Entities.RoleEntity", b =>
                 {
                     b.Navigation("SystemAccountRoles");
@@ -916,17 +1082,27 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("DataAccess.Entities.SystemAccountEntity", b =>
                 {
+                    b.Navigation("CreatedBlogs");
+
+                    b.Navigation("CreatedCategories");
+
                     b.Navigation("CreatedProducts");
 
                     b.Navigation("ManagedOrders");
 
                     b.Navigation("SystemAccountRoles");
 
+                    b.Navigation("SystemAccountTokens");
+
                     b.Navigation("UpdatedProducts");
+
+                    b.Navigation("VerifiedBlogs");
                 });
 
             modelBuilder.Entity("DataAccess.Entities.TokenTypeEntity", b =>
                 {
+                    b.Navigation("SystemAccountTokens");
+
                     b.Navigation("UserTokens");
                 });
 

@@ -72,15 +72,15 @@ namespace BusinessLogic.Services.Cores.Implementation
 
         public Task<bool> IsEmailExistedAsync(string email, CancellationToken cancellationToken)
         {
-            throw new Exception();
+            return _unitOfWork.UserRepository.IsEmailExistedAsync(email, cancellationToken);
         }
 
         public Task<bool> IsUsernameExistedAsync(string username, CancellationToken cancellationToken)
         {
-            throw new Exception();
+            return _unitOfWork.UserRepository.IsUserNameExistedAsync(username, cancellationToken);
         }
 
-        public async Task<IResult<UserEntity>> LoginAsync(
+        public async Task<IResult<UserEntity>> LoginByUsernameAsync(
             string username,
             string password,
             CancellationToken cancellationToken)
@@ -88,7 +88,33 @@ namespace BusinessLogic.Services.Cores.Implementation
             var result = Result<UserEntity>.Failed();
             var passwordHash = _passwordService.GetHashPassword(password);
 
-            var foundUser = new UserEntity();
+            var foundUser = await _unitOfWork.UserRepository.FindByExpressionAsync(
+                findExpression: user => 
+                    user.UserName.Equals(username)
+                    && user.PasswordHash.Equals(passwordHash),
+                cancellationToken: cancellationToken);
+
+            if (Equals(foundUser, null))
+            {
+                return result;
+            }
+
+            return Result<UserEntity>.Success(foundUser);
+        }
+
+        public async Task<IResult<UserEntity>> LoginByEmailAsync(
+            string email,
+            string password,
+            CancellationToken cancellationToken)
+        {
+            var result = Result<UserEntity>.Failed();
+            var passwordHash = _passwordService.GetHashPassword(password);
+
+            var foundUser = await _unitOfWork.UserRepository.FindByExpressionAsync(
+                findExpression: user => 
+                    user.Email.Equals(email)
+                    && user.PasswordHash.Equals(passwordHash), 
+                cancellationToken: cancellationToken);
 
             if (Equals(foundUser, null))
             {
@@ -115,6 +141,7 @@ namespace BusinessLogic.Services.Cores.Implementation
                     var user = new UserEntity
                     {
                         Id = Guid.NewGuid(),
+                        FullName = $"{registerDto.FirstName}{UserEntity.NameSeparator}{registerDto.LastName}",
                         UserName = registerDto.Username,
                         Email = registerDto.Email,
                         PasswordHash = _passwordService.GetHashPassword(registerDto.Password),
@@ -125,6 +152,43 @@ namespace BusinessLogic.Services.Cores.Implementation
                         PhoneNumber = string.Empty
                     };
 
+                    await _unitOfWork.UserRepository.AddAsync(newEntity: user);
+
+                    await _unitOfWork.SaveChangesToDatabaseAsync(
+                        cancellationToken: cancellationToken);
+
+                    await _unitOfWork.CommitTransactionAsync(
+                        cancellationToken: cancellationToken);
+
+                    result = Result<Guid>.Success(user.Id);
+                }
+                catch
+                {
+                    await _unitOfWork.RollBackTransactionAsync(
+                        cancellationToken: cancellationToken);
+                }
+                finally
+                {
+                    await _unitOfWork.DisposeTransactionAsync(
+                        cancellationToken: cancellationToken);
+                }
+            });
+
+            return result;
+        }
+
+        public async Task<IResult<Guid>> RegisterSystemUserAsync(UserEntity user, CancellationToken cancellationToken)
+        {
+            var result = Result<Guid>.Failed();
+
+            var executionStrategy = _unitOfWork.CreateExecutionStrategy();
+
+            await executionStrategy.ExecuteAsync(operation: async () =>
+            {
+                await _unitOfWork.CreateTransactionAsync(cancellationToken: cancellationToken);
+
+                try
+                {
                     await _unitOfWork.UserRepository.AddAsync(newEntity: user);
 
                     await _unitOfWork.SaveChangesToDatabaseAsync(

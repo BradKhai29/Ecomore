@@ -27,8 +27,9 @@ public class EcommerceAppUnitOfWork<TContext> : IUnitOfWork<TContext>
     private IOrderRepository _orderRepository;
     private IOrderStatusRepository _orderStatusRepository;
     private IPaymentMethodRepository _paymentMethodRepository;
-    private IProductImageRepository _productImageRepository;
     private IProductRepository _productRepository;
+    private IProductImageRepository _productImageRepository;
+    private IProductStatusRepository _productStatusRepository;
     private IRoleRepository _roleRepository;
     private ISystemAccountRepository _systemAccountRepository;
     private ISystemAccountRoleRepository _systemAccountRoleRepository;
@@ -119,6 +120,15 @@ public class EcommerceAppUnitOfWork<TContext> : IUnitOfWork<TContext>
         }
     }
 
+    public IProductRepository ProductRepository
+    {
+        get
+        {
+            _productRepository ??= new ProductRepository(_dbContext);
+            return _productRepository;
+        }
+    }
+
     public IProductImageRepository ProductImageRepository
     {
         get
@@ -128,12 +138,12 @@ public class EcommerceAppUnitOfWork<TContext> : IUnitOfWork<TContext>
         }
     }
 
-    public IProductRepository ProductRepository
+    public IProductStatusRepository ProductStatusRepository
     {
         get
         {
-            _productRepository ??= new ProductRepository(_dbContext);
-            return _productRepository;
+            _productStatusRepository ??= new ProductStatusRepository(_dbContext);
+            return _productStatusRepository;
         }
     }
 

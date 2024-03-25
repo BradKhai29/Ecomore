@@ -21,7 +21,7 @@ namespace DataAccess.Entities
         /// </summary>
         public string TransactionCode { get; set; }
 
-        public string UserNote { get; set; }
+        public string OrderNote { get; set; }
 
         public decimal TotalPrice { get; set; }
 

@@ -1,4 +1,6 @@
-﻿namespace DataAccess.DataSeedings
+﻿using DataAccess.Entities;
+
+namespace DataAccess.DataSeedings
 {
     public static class OrderStatuses
     {
@@ -30,6 +32,19 @@
         }
 
         /// <summary>
+        ///     Represent for the on-delivery status of the order.
+        /// </summary>
+        /// <remarks>
+        ///     The order with this status is being delivered by the shipper.
+        /// </remarks>
+        public static class OnDelivery
+        {
+            public static readonly Guid Id = new();
+
+            public const string Name = "On Delivery";
+        }
+
+        /// <summary>
         ///     Represent for the done status of the order.
         /// </summary>
         /// <remarks>
@@ -55,5 +70,32 @@
 
             public const string Name = "Cancelled";
         }
+
+        #region Public Methods
+        private static IEnumerable<OrderStatusEntity> _values;
+        private static readonly object _lock = new object();
+
+        public static IEnumerable<OrderStatusEntity> GetValues()
+        {
+            const int totalStatuses = 5;
+
+            lock(_lock )
+            {
+                if (_values == null)
+                {
+                    _values = new List<OrderStatusEntity>(capacity: totalStatuses)
+                    {
+                        new() {Id = Pending.Id, Name = Pending.Name},
+                        new() {Id = InProcessing.Id, Name = InProcessing.Name},
+                        new() {Id = OnDelivery.Id, Name = OnDelivery.Name},
+                        new() {Id = Done.Id, Name = Done.Name},
+                        new() {Id = Cancelled.Id, Name = Cancelled.Name},
+                    };
+                }
+
+                return _values;
+            }
+        }
+        #endregion
     }
 }

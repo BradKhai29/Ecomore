@@ -1,0 +1,70 @@
+﻿@page
+@model Presentation.Areas.Admin.Pages.Product.CreateModel
+@{
+}
+
+<section class="container mt-5">
+    <form class="row mx-0" method="post" accept-charset="utf-8" enctype="multipart/form-data" method="post">
+        <div class="col-sm-12 col-md-5 p-0 d-flex flex-column border border-end">
+            <div class="flex-grow-1 d-flex">
+                <label class="position-relative w-100 h-100" asp-for="@Model.ProductInfo.ProductImages">
+                    <img class="w-100" src="https://www.svgrepo.com/show/508699/landscape-placeholder.svg"/>
+                    <span class="position-absolute top-50 start-50 translate-middle btn btn-dark btn-lg fw-bold">
+                        Upload Product image
+                    </span>
+                    <span asp-validation-for="@Model.ProductInfo.ProductImages" class="pt-4 text-danger fw-bold position-absolute top-0 start-50 translate-middle-x">
+                    </span>
+                </label>
+                <input type="file" asp-for="@Model.ProductInfo.ProductImages" accept="image/png, image/jpeg, image/jpg" hidden/>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-7 p-4 d-flex flex-column border border-end border-bottom">
+            <section class="d-flex flex-column flex-grow-1">
+                <p class="d-flex flex-column">
+                    <span class="text-danger fw-bold" asp-validation-for="@Model.ProductInfo.Name"></span>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">Product Name</span>
+                        <input type="text" class="form-control rounded-end" asp-for="@Model.ProductInfo.Name" placeholder="Enter product name">
+                    </div>
+
+                    <span class="text-danger fw-bold" asp-validation-for="@Model.ProductInfo.CategoryId"></span>
+                    <div class="input-group mb-3">
+                        <label class="input-group-text" asp-for="@Model.ProductInfo.CategoryId">Category</label>
+                        <select class="form-select rounded-end" asp-for="@Model.ProductInfo.CategoryId">
+                            @foreach (var item in Model.Categories)
+                            {
+                                <option value="@item.Id">@item.Name</option>
+                            }
+                        </select>
+                    </div>
+
+                    <span class="text-danger fw-bold" asp-validation-for="@Model.ProductInfo.UnitPrice"></span>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">Unit Price</span>
+                        <input type="number" min="1000" max="@int.MaxValue" class="form-control" asp-for="@Model.ProductInfo.UnitPrice" placeholder="Enter product unit price">
+                        <span class="input-group-text rounded-end">VND</span>
+                    </div>
+                </p>
+                <section id="product-description" class="d-flex flex-column flex-grow-1">
+                    <span class="text-danger fw-bold" asp-validation-for="@Model.ProductInfo.Description"></span>
+                    <div class="mb-3">
+                        <label asp-for="@Model.ProductInfo.Description" class="form-label">Product Description</label>
+                        <textarea class="form-control" asp-for="@Model.ProductInfo.Description" placeholder="Enter product description" rows="3"></textarea>
+                    </div>
+                    <span class="text-danger fw-bold" asp-validation-for="@Model.ProductInfo.QuantityInStock"></span>
+                    <div class="d-flex">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Quantity in stock</span>
+                            <input type="number" min="1" max="@int.MaxValue" class="form-control rounded-end" asp-for="@Model.ProductInfo.QuantityInStock">
+                        </div>
+                    </div>
+                </section>
+                <div class="d-flex pt-4 pb-2 flex-column">
+                    <button class="btn btn-dark flex-grow-1 rounded-0 fw-bold" type="submit">
+                        CREATE NEW PRODUCT
+                    </button>
+                </div>
+            </section>
+        </div>
+    </form>
+</section>

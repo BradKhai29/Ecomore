@@ -20,7 +20,7 @@ namespace DataAccess.DbContexts
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //{
         //    // Below comment for migrations purpose.
-        //    var connectionString = "";
+        //    var connectionString = "Data Source=localhost;Initial Catalog=PRN221_EcommerceDB;User ID=sa;Password=123123;Trust Server Certificate=True";
         //    optionsBuilder.UseSqlServer(connectionString);
         //    optionsBuilder.UseLoggerFactory(GetLoggerFactory());
         //}

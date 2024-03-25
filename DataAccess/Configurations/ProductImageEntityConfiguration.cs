@@ -19,6 +19,10 @@ namespace DataAccess.Configurations
                 .IsRequired();
 
             builder
+                .Property(image => image.UploadOrder)
+                .IsRequired();
+
+            builder
                 .Property(image => image.FileName)
                 .HasColumnType(SqlDataTypes.SqlServer.NVARCHAR_50)
                 .IsRequired();

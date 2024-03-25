@@ -34,8 +34,8 @@ namespace DataAccess.Configurations
                 .IsRequired();
 
             builder
-                .Property(product => product.IsAvailable)
-                .HasDefaultValue(true);
+                .Property(product => product.ProductStatusId)
+                .IsRequired();
 
             builder
                 .Property(product => product.QuantityInStock)

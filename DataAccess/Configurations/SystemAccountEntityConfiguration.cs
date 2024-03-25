@@ -66,6 +66,20 @@ namespace DataAccess.Configurations
                 .OnDelete(DeleteBehavior.NoAction);
 
             builder
+                .HasMany(systemAccount => systemAccount.CreatedBlogs)
+                .WithOne(blog => blog.Creator)
+                .HasPrincipalKey(systemAccount => systemAccount.Id)
+                .HasForeignKey(blog => blog.CreatedBy)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder
+                .HasMany(systemAccount => systemAccount.VerifiedBlogs)
+                .WithOne(blog => blog.Verifier)
+                .HasPrincipalKey(systemAccount => systemAccount.Id)
+                .HasForeignKey(blog => blog.VerifiedBy)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder
                 .HasMany(systemAccount => systemAccount.ManagedOrders)
                 .WithOne(order => order.Updater)
                 .HasPrincipalKey(systemAccount => systemAccount.Id)

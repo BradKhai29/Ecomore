@@ -15,7 +15,7 @@ namespace DataAccess.Entities
 
         public string Description { get; set; }
 
-        public bool IsAvailable { get; set; }
+        public Guid ProductStatusId { get; set; }
 
         public int QuantityInStock { get; set; }
 
@@ -29,6 +29,8 @@ namespace DataAccess.Entities
 
         #region Relationships
         public CategoryEntity Category { get; set; }
+
+        public ProductStatusEntity ProductStatus { get; set; }
 
         public IEnumerable<ProductImageEntity> ProductImages { get; set; }
 

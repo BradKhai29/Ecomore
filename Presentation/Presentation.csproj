@@ -18,10 +18,8 @@
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
 	</ItemGroup>
 	<ItemGroup>
-	  <Folder Include="Areas\Admin\Pages\Category\" />
 	  <Folder Include="Areas\Admin\Pages\Order\" />
-	  <Folder Include="Areas\Admin\Pages\Product\" />
-	  <Folder Include="Pages\Auth\" />
+	  <Folder Include="ExtensionMethods\Others\" />
 	</ItemGroup>
 
 </Project>

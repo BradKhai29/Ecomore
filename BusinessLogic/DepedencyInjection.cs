@@ -33,6 +33,8 @@ namespace BusinessLogic
         private static IServiceCollection AddCoreServices(this IServiceCollection services)
         {
             services.AddScoped<IUserAuthHandlingService, UserAuthHandlingService>();
+            services.AddScoped<IUserTokenHandlingService, UserTokenHandlingService>();
+            services.AddScoped<ISystemAccountTokenHandlingService, SystemAccountTokenHandlingService>();
             services.AddScoped<ISystemAccountAuthHandlingService, SystemAccountAuthHandlingService>();
             services.AddScoped<IProductHandlingService, ProductHandlingService>();
 

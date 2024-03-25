@@ -23,6 +23,8 @@ namespace DataAccess.UnitOfWorks.Base
 
         IProductImageRepository ProductImageRepository { get; }
 
+        IProductStatusRepository ProductStatusRepository { get; }
+
         IProductRepository ProductRepository { get; }
 
         IRoleRepository RoleRepository { get; }

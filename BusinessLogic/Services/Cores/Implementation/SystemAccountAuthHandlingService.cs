@@ -42,10 +42,8 @@ namespace BusinessLogic.Services.Cores.Implementation
             string email,
             CancellationToken cancellationToken)
         {
-            Expression<Func<SystemAccountEntity, bool>> findExpression = account => account.Email.Equals(email);
-
             return _unitOfWork.SystemAccountRepository.IsFoundByExpressionAsync(
-                findExpresison: findExpression,
+                findExpresison: account => account.Email.Equals(email),
                 cancellationToken: cancellationToken);
         }
 
@@ -53,14 +51,12 @@ namespace BusinessLogic.Services.Cores.Implementation
             string username,
             CancellationToken cancellationToken)
         {
-            Expression<Func<SystemAccountEntity, bool>> findExpression = account => account.UserName.Equals(username);
-
             return _unitOfWork.SystemAccountRepository.IsFoundByExpressionAsync(
-                findExpresison: findExpression,
+                findExpresison: account => account.UserName.Equals(username),
                 cancellationToken: cancellationToken);
         }
 
-        public async Task<IResult<SystemAccountEntity>> LoginAsync(
+        public async Task<IResult<SystemAccountEntity>> LoginByUserNameAsync(
             string username,
             string password,
             CancellationToken cancellationToken)
@@ -71,6 +67,32 @@ namespace BusinessLogic.Services.Cores.Implementation
 
             Expression<Func<SystemAccountEntity, bool>> findExpression = (SystemAccountEntity account)
                 => account.UserName.Equals(username)
+                && account.PasswordHash.Equals(passwordHash);
+
+            var foundAccount = await _unitOfWork.SystemAccountRepository.FindByExpressionAsync(
+                findExpresison: findExpression,
+                asNoTracking: true,
+                cancellationToken: cancellationToken);
+
+            if (!Equals(foundAccount, null))
+            {
+                return Result<SystemAccountEntity>.Success(foundAccount);
+            }
+
+            return result;
+        }
+
+        public async Task<IResult<SystemAccountEntity>> LoginByEmailAsync(
+            string email,
+            string password,
+            CancellationToken cancellationToken)
+        {
+            var result = Result<SystemAccountEntity>.Failed();
+
+            var passwordHash = _passwordService.GetHashPassword(password);
+
+            Expression<Func<SystemAccountEntity, bool>> findExpression = (SystemAccountEntity account)
+                => account.Email.Equals(email)
                 && account.PasswordHash.Equals(passwordHash);
 
             var foundAccount = await _unitOfWork.SystemAccountRepository.FindByExpressionAsync(
@@ -106,6 +128,57 @@ namespace BusinessLogic.Services.Cores.Implementation
                         UserName = registerDto.Username,
                         Email = registerDto.Email,
                         PasswordHash = _passwordService.GetHashPassword(registerDto.Password),
+                        AccountStatusId = AccountStatuses.PendingConfirmed.Id,
+                        CreatedAt = DateTime.UtcNow,
+                        UpdatedAt = DateTime.UtcNow,
+                    };
+
+                    await _unitOfWork.SystemAccountRepository.AddAsync(
+                        newEntity: account,
+                        cancellationToken: cancellationToken);
+
+                    await _unitOfWork.SaveChangesToDatabaseAsync(
+                        cancellationToken: cancellationToken);
+
+                    await _unitOfWork.CommitTransactionAsync(
+                        cancellationToken: cancellationToken);
+
+                    result = Result<Guid>.Success(account.Id);
+                }
+                catch
+                {
+                    await _unitOfWork.RollBackTransactionAsync(
+                        cancellationToken: cancellationToken);
+                }
+                finally
+                {
+                    await _unitOfWork.DisposeTransactionAsync(
+                        cancellationToken: cancellationToken);
+                }
+            });
+
+            return result;
+        }
+
+        public async Task<IResult<Guid>> RegisterDefaultAccountAsync(
+            CancellationToken cancellationToken)
+        {
+            var result = Result<Guid>.Failed();
+
+            var executionStrategy = _unitOfWork.CreateExecutionStrategy();
+
+            await executionStrategy.ExecuteAsync(operation: async () =>
+            {
+                await _unitOfWork.CreateTransactionAsync(cancellationToken: cancellationToken);
+
+                try
+                {
+                    var account = new SystemAccountEntity
+                    {
+                        Id = DefaultValues.SystemId,
+                        UserName = "system",
+                        Email = "duongkhai.dev@gmail.com",
+                        PasswordHash = _passwordService.GetHashPassword(password: "khai2904"),
                         AccountStatusId = AccountStatuses.PendingConfirmed.Id,
                         CreatedAt = DateTime.UtcNow,
                         UpdatedAt = DateTime.UtcNow,

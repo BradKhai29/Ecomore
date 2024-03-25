@@ -7,6 +7,11 @@ namespace DataAccess.Entities
         IdentityUser<Guid>,
         IGuidEntity
     {
+        public const string NameSeparator = "[:]";
+        public static readonly int NameSeparatorLength = NameSeparator.Length;
+
+        public string FullName { get; set; }
+
         public string AvatarUrl { get; set; }
 
         public bool Gender { get; set; }
@@ -16,6 +21,42 @@ namespace DataAccess.Entities
         public DateTime CreatedAt { get; set; }
 
         public DateTime UpdatedAt { get; set; }
+
+        #region Public Methods
+        public string FirstName()
+        {
+            return GetFirstName(FullName);
+        }
+
+        public string LastName()
+        {
+            return GetLastName(FullName);
+        }
+
+        public static string GetFirstName(string fullName)
+        {
+            if (string.IsNullOrEmpty(fullName) || !fullName.Contains(NameSeparator))
+            {
+                return string.Empty;
+            }
+
+            int firstNameIndex = fullName.IndexOf(NameSeparator);
+
+            return fullName[..firstNameIndex];
+        }
+
+        public static string GetLastName(string fullName)
+        {
+            if (string.IsNullOrEmpty(fullName) || !fullName.Contains(NameSeparator))
+            {
+                return string.Empty;
+            }
+
+            int lastNameIndex = fullName.IndexOf(NameSeparator) + NameSeparatorLength;
+
+            return fullName[lastNameIndex..];
+        }
+        #endregion
 
         #region Relationships
         public AccountStatusEntity AccountStatus { get; set; }

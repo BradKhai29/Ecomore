@@ -21,5 +21,9 @@ namespace DataAccess.Repositories.Base
         Task<ProductEntity> FindByIdForDisplayShoppingCartAsync(
             Guid productId,
             CancellationToken cancellationToken);
+
+        Task<int> BulkUpdateAsync(
+            ProductEntity product,
+            CancellationToken cancellationToken);
     }
 }

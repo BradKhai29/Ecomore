@@ -8,6 +8,8 @@ namespace DataAccess.Entities
 
         #region Relationships
         public IEnumerable<UserTokenEntity> UserTokens { get; set; }
+
+        public IEnumerable<SystemAccountTokenEntity> SystemAccountTokens { get; set; }
         #endregion
 
         #region MetaData

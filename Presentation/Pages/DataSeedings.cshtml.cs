@@ -4,7 +4,6 @@ using DataAccess.DataSeedings;
 using DataAccess.DbContexts;
 using DataAccess.Entities;
 using DataAccess.UnitOfWorks.Base;
-using DTOs.Implementation.Auths.Incomings;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -14,46 +13,64 @@ namespace Presentation.Pages
     {
         private readonly IUnitOfWork<AppDbContext> _unitOfWork;
         private readonly ISystemAccountAuthHandlingService _systemAccountAuthHandlingService;
-        private readonly bool _allowSeeding = false;
+        private readonly IUserAuthHandlingService _userAuthHandlingService;
 
         public DataSeedingsModel(
             IUnitOfWork<AppDbContext> unitOfWork,
-            ISystemAccountAuthHandlingService systemAccountAuthHandlingService)
+            ISystemAccountAuthHandlingService systemAccountAuthHandlingService,
+            IUserAuthHandlingService userAuthHandlingService)
         {
             _unitOfWork = unitOfWork;
             _systemAccountAuthHandlingService = systemAccountAuthHandlingService;
+            _userAuthHandlingService = userAuthHandlingService;
         }
 
         public async Task<IActionResult> OnGetAsync(CancellationToken cancellationToken)
         {
-            if (!_allowSeeding)
+            var notAllowSeeding = await _unitOfWork.SystemAccountRepository.IsFoundByExpressionAsync(
+                findExpresison: account => account.Id == DefaultValues.SystemId,
+                cancellationToken: cancellationToken);
+
+            if (notAllowSeeding)
             {
                 return Page();
             }
 
-            await AddRoles();
-            await AddCategories(cancellationToken);
             await AddAccountStatuses(cancellationToken);
-            await AddTokenTypes(cancellationToken);
-            await AddOrderStatuses(cancellationToken);
-            await AddPaymentMethods(cancellationToken);
-
             await _unitOfWork.SaveChangesToDatabaseAsync(cancellationToken);
 
-            var registerDto = new RegisterDto
-            {
-                Username = "system",
-                Email = "duongkhai.dev@gmail.com",
-                Password = "khai2904"
-            };
-
-            var result = await _systemAccountAuthHandlingService.RegisterAsync(
-                registerDto: registerDto,
+            var adminResult = await _systemAccountAuthHandlingService.RegisterDefaultAccountAsync(
                 cancellationToken: cancellationToken);
 
-            if (result.IsSuccess)
+            var user = new UserEntity
             {
+                Id = AppUsers.DoNotRemove.Id,
+                FullName = $"none{UserEntity.NameSeparator}none",
+                UserName = AppUsers.DoNotRemove.UserName,
+                PasswordHash = AppUsers.DoNotRemove.PasswordHash,
+                AccountStatusId = AccountStatuses.EmailConfirmed.Id,
+                Gender = true,
+                Email = "abc@gmail.com",
+                CreatedAt = DateTime.UtcNow,
+                AvatarUrl = "unknown",
+                UpdatedAt = DateTime.UtcNow,
+                EmailConfirmed = true,
+                PhoneNumber = "0123456789",
+            };
+
+            var userResult = await _userAuthHandlingService.RegisterSystemUserAsync(user, cancellationToken);
+
+            if (adminResult.IsSuccess && userResult.IsSuccess)
+            {
+                await AddRoles();
+                await AddCategories(cancellationToken);
+                await AddProductStatuses(cancellationToken);
                 await AddProducts(cancellationToken);
+                await AddTokenTypes(cancellationToken);
+                await AddOrderStatuses(cancellationToken);
+                await AddPaymentMethods(cancellationToken);
+
+                await _unitOfWork.SaveChangesToDatabaseAsync(cancellationToken);
             }
 
             return Page();
@@ -65,23 +82,23 @@ namespace Presentation.Pages
             {
                 new()
                 {
-                    Id = Roles.System.Id,
-                    Name = Roles.System.Name
+                    Id = AppRoles.System.Id,
+                    Name = AppRoles.System.Name
                 },
                 new()
                 {
-                    Id = Roles.Admin.Id,
-                    Name = Roles.Admin.Name
+                    Id = AppRoles.Admin.Id,
+                    Name = AppRoles.Admin.Name
                 },
                 new()
                 {
-                    Id = Roles.Employee.Id,
-                    Name = Roles.Employee.Name
+                    Id = AppRoles.Employee.Id,
+                    Name = AppRoles.Employee.Name
                 },
                 new()
                 {
-                    Id = Roles.DoNotRemove.Id,
-                    Name = Roles.DoNotRemove.Name
+                    Id = AppRoles.DoNotRemove.Id,
+                    Name = AppRoles.DoNotRemove.Name
                 }
             };
 
@@ -98,7 +115,9 @@ namespace Presentation.Pages
                 new()
                 {
                     Id = Categories.ProcessedNut.Id,
-                    Name = Categories.ProcessedNut.Name
+                    Name = Categories.ProcessedNut.Name,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = DefaultValues.SystemId
                 }
             };
 
@@ -129,6 +148,13 @@ namespace Presentation.Pages
             await _unitOfWork.AccountStatusRepository.AddRangeAsync(statuses, cancellationToken);
         }
 
+        private async Task AddProductStatuses(CancellationToken cancellationToken)
+        {
+            var statuses = ProductStatuses.GetValues();
+
+            await _unitOfWork.ProductStatusRepository.AddRangeAsync(statuses, cancellationToken);
+        }
+
         private async Task AddTokenTypes(CancellationToken cancellationToken)
         {
             var tokenTypes = new List<TokenTypeEntity>
@@ -150,48 +176,14 @@ namespace Presentation.Pages
 
         private async Task AddOrderStatuses(CancellationToken cancellationToken)
         {
-            var orderStatuses = new List<OrderStatusEntity>
-            {
-                new()
-                {
-                    Id = OrderStatuses.Pending.Id,
-                    Name = OrderStatuses.Pending.Name
-                },
-                new()
-                {
-                    Id = OrderStatuses.InProcessing.Id,
-                    Name = OrderStatuses.InProcessing.Name
-                },
-                new()
-                {
-                    Id = OrderStatuses.Done.Id,
-                    Name = OrderStatuses.Done.Name
-                },
-                new()
-                {
-                    Id = OrderStatuses.Cancelled.Id,
-                    Name = OrderStatuses.Cancelled.Name
-                }
-            };
+            var orderStatuses = OrderStatuses.GetValues();
 
             await _unitOfWork.OrderStatusRepository.AddRangeAsync(orderStatuses, cancellationToken);
         }
 
         private async Task AddPaymentMethods(CancellationToken cancellationToken)
         {
-            var paymentMethods = new List<PaymentMethodEntity>
-            {
-                new()
-                {
-                    Id = PaymentMethods.OnlineBanking.Id,
-                    Name = PaymentMethods.OnlineBanking.Name
-                },
-                new()
-                {
-                    Id = PaymentMethods.CashOnDelivery.Id,
-                    Name = PaymentMethods.CashOnDelivery.Name
-                }
-            };
+            var paymentMethods = PaymentMethods.GetValues();
 
             await _unitOfWork.PaymentMethodRepository.AddRangeAsync(paymentMethods, cancellationToken);
         }
@@ -210,7 +202,7 @@ namespace Presentation.Pages
                     Name = $"Hat dinh duong [{i}]",
                     CreatedAt = DateTime.UtcNow,
                     CreatedBy = DefaultValues.SystemId,
-                    IsAvailable = true,
+                    ProductStatusId = ProductStatuses.InStock.Id,
                     Description = "San pham ngon",
                     QuantityInStock = 100,
                     UnitPrice = 50_000,

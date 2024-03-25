@@ -11,7 +11,8 @@ namespace Presentation.ExtensionMethods
     {
         public static IServiceCollection AddOptionsConfiguration(this IServiceCollection services)
         {
-            services.ConfigureOptions<JwtOptionsSetup>();
+            services.ConfigureOptions<UserAccountJwtOptionsSetup>();
+            services.ConfigureOptions<SystemAccountJwtOptionsSetup>();
             services.ConfigureOptions<PasswordHashOptionsSetup>();
             services.ConfigureOptions<ResetPasswordOptionsSetup>();
             services.ConfigureOptions<MailOptionsSetup>();

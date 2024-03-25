@@ -3,4 +3,24 @@
 @{
 }
 
-Hello my order
+<section class="container mt-3">
+    <div class="py-3 text-center">
+        <h2><span class="border-bottom border-3 border-dark">Your Orders</span></h2>
+    </div>
+
+    @if(Model.HasOrder)
+    {
+        foreach(var item in Model.Orders)
+        {            
+            <div class="card row mb-3">
+                <div class="card-body">
+                    <h5 class="card-title d-flex justify-content-between">
+                        <span class="badge bg-black">@item.CreatedAt</span>
+                    </h5>
+                    <p class="card-text">Total Price: @item.TotalPrice</p>
+                    <a href="#" class="btn btn-primary">View Details</a>
+                </div>
+            </div>
+        }
+    }
+</section>

@@ -28,6 +28,15 @@
                 ErrorMessages = messages
             };
         }
+
+        public static CommonResponse Failed(params string[] messages)
+        {
+            return new CommonResponse
+            {
+                IsSuccess = false,
+                ErrorMessages = messages
+            };
+        }
         #endregion
 
         public const string DatabaseErrorMessage = "Something wrong with the database when processing.";

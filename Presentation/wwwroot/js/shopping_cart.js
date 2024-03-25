@@ -1,18 +1,31 @@
-// Api endpoints section.
+﻿// Api endpoints section.
 const add_item_to_cart_endpoint = "https://localhost:7233/api/cart/add";
 const remove_item_from_cart_endpoint = "https://localhost:7233/api/cart/remove";
 
-// HtmlElements.
-const body = document.querySelector("body");
-const shoppingCart = document.querySelector("#view-shopping-cart");
-
 // Query selectors section.
+// Products section.
 const productNameSelector = ".product-name";
 const productQuantitySelector = ".product-quantity";
 const productImageSelector = "img[name='product-image']";
 const unitPriceSelector = "[name='unit-price']";
 
-function CreateAddToCartRequest(productId, quantity) {
+// Shopping Cart section.
+const cartItemsCountSelector = "#cart-items-count";
+const cartTotalSelector = "#cart-total";
+const cartItemListSelector = "ul#item-list";
+const cartItemSelector = "[name='cart-item']";
+const cartItemQuantitySelector = ".cart-item-quantity";
+const cartItemUnitPriceSelector = ".cart-item-unit-price";
+
+// HtmlElements.
+const body = document.querySelector("body");
+
+const shoppingCart = document.querySelector("#view-shopping-cart");
+const cartItemList = document.querySelector(cartItemListSelector);
+const cartItemsCount = document.querySelector(cartItemsCountSelector);
+const cartTotal = document.querySelector(cartTotalSelector);
+
+function InitAddToCartRequest(productId, quantity) {
 	let request = new Request(add_item_to_cart_endpoint, {
 		method: 'POST',
 		headers: {
@@ -27,7 +40,28 @@ function CreateAddToCartRequest(productId, quantity) {
 	return request;
 }
 
-function CreateRemoveItemFromCartRequest(productId) {
+function ReloadShoppingCart() {
+	const cartItems = cartItemList.querySelectorAll(cartItemSelector);
+
+	// Reload the items count.
+	cartItemsCount.innerText = cartItems.length;
+
+	let total = 0;
+
+	for (let item of cartItems) {
+		let quantity = item.querySelector(cartItemQuantitySelector);
+		let unitPrice = item.querySelector(cartItemUnitPriceSelector);
+
+		let subTotal = quantity.innerText * 1 * unitPrice.innerText;
+		total += subTotal;
+	}
+
+	cartTotal.innerText = total;
+}
+
+ReloadShoppingCart();
+
+function InitRemoveItemFromCartRequest(productId) {
 	const url = `${remove_item_from_cart_endpoint}/${productId}`;
 
 	let request = new Request(url, {
@@ -56,14 +90,7 @@ function HideShoppingCart() {
 }
 
 function CreateCartItemHtml(productId, productName, quantity, unitPrice, imageUrl) {
-	const itemListSelector = "ul#item-list";
-	const cartItemtSelector = "[name='cart-item']";
-	const cartItemQuantitySelector = ".cart-item-quantity";
-	const cartItemUnitPriceSelector = ".cart-item-unit-price";
-
-	let itemList = shoppingCart.querySelector(itemListSelector);
-
-	let cartItems = itemList.querySelectorAll(cartItemtSelector);
+	let cartItems = cartItemList.querySelectorAll(cartItemSelector);
 
 	for (let item of cartItems) {
 		let isFound = item.id == productId;
@@ -74,6 +101,7 @@ function CreateCartItemHtml(productId, productName, quantity, unitPrice, imageUr
 
 			cartItemQuantity.innerText = newQuantity;
 
+			ReloadShoppingCart(true);
 			return;
 		}
 	}
@@ -104,11 +132,13 @@ function CreateCartItemHtml(productId, productName, quantity, unitPrice, imageUr
                 </button>
             </div>
         </li>`;
-	cartItems
-	itemList.innerHTML += html;
+
+	cartItemList.innerHTML += html;
+
+	ReloadShoppingCart(true);
 }
 
-function AddItemToCart(event) {
+async function AddItemToCart(event) {
 	const addToCartButtonName = "add-to-cart";
 
 	let isClickOnAddToCartButton = event.target.name === addToCartButtonName;
@@ -126,46 +156,34 @@ function AddItemToCart(event) {
 		const unitPrice = product.querySelector(unitPriceSelector).innerText;
 		const imageUrl = product.querySelector(productImageSelector).src;
 
-		const request = CreateAddToCartRequest(productId, quantity);
-		const response = fetch(request);
+		const request = InitAddToCartRequest(productId, quantity);
+		const response = await fetch(request);
 
-		let isAddSuccess = false;
+		if (!response.ok) {
+			return;
+		}
 
-		response
-			.then(function (res) {
-				isAddSuccess = (res.status == 200);
-			})
-			.then(function () {
-				if (isAddSuccess) {
-					CreateCartItemHtml(productId, productName, quantity, unitPrice, imageUrl);
-				}
-			});
-
+		CreateCartItemHtml(productId, productName, quantity, unitPrice, imageUrl);
 		event.target.disabled = false;
 	}
 }
 
-function RemoveItemFromCart(event) {
+async function RemoveItemFromCart(event) {
 	const removeItemButtonName = "remove-item-button";
 	const product = event.currentTarget;
 	const productId = product.id;
 
 	if (event.target.id == removeItemButtonName) {
-		let request = CreateRemoveItemFromCartRequest(productId);
+		const request = InitRemoveItemFromCartRequest(productId);
+		const response = await fetch(request);
 
-		let response = fetch(request);
+		if (!response.ok) {
+			return;
+		}
 
-		let isRemoveSuccess = false;
-
-		response.then(function (res) {
-			// If OK status code.
-			isRemoveSuccess = (res.status == 200);
-
-		}).then(function() {
-			if (isRemoveSuccess) {
-				product.parentNode.removeChild(product);
-			}
-		});
+		// Remove the cart item and reload the cart.
+		product.parentNode.removeChild(product);
+		ReloadShoppingCart(true);
 	}
 }
 

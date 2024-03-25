@@ -8,7 +8,7 @@ namespace Options.Models
 {
     public class ResetPasswordOptions
     {
-        public const string ParentSectionName = AuthenticationSection.Name;
+        public const string ParentSectionName = AuthenticationSections.RootSection;
         public const string SectionName = "ResetPassword";
 
         public string Issuer { get; set; }

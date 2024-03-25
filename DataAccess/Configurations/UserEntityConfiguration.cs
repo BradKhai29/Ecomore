@@ -16,6 +16,11 @@ namespace DataAccess.Configurations
 
             // Properties Configuration.
             builder
+                .Property(user => user.FullName)
+                .HasColumnType(SqlDataTypes.SqlServer.NVARCHAR_200)
+                .IsRequired();
+
+            builder
                 .Property(user => user.AvatarUrl)
                 .HasColumnType(SqlDataTypes.SqlServer.NVARCHAR_200)
                 .HasDefaultValue(DefaultValues.UserAvatarUrl)
